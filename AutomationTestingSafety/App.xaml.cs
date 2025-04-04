@@ -1,11 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows;
-using AutomationTestingSafety.Database.Migration;
+using AutomationTestingSafety.Database;
 
 namespace AutomationTestingSafety
 {
@@ -18,8 +13,7 @@ namespace AutomationTestingSafety
         {
             base.OnStartup(e);
 
-            // Замените строку подключения на свою
-            string connectionString = @"Data Source=DESKTOP-L61C90H;Initial Catalog=AutomationTestingSafety;Integrated Security=True;";
+            string connectionString = ConnectionString._connectionString;
 
             var migration = new MigrationRunner(connectionString);
             try

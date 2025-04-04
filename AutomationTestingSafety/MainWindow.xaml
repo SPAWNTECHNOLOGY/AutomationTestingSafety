@@ -10,7 +10,7 @@
         Width="400"
         WindowStartupLocation="CenterScreen"
         ResizeMode="NoResize"
-        Background="#FFF0F0F0"
+        Background="#FFD8D8D8"
         FontFamily="Segoe UI">
 
     <Window.Resources>
