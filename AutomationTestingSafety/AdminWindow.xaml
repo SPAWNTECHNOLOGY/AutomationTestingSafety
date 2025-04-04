@@ -3,11 +3,53 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:AutomationTestingSafety"
         mc:Ignorable="d"
-        Title="Личный кабинет администратора" Height="450" Width="800">
-    <Grid>
-        <Label Name="lblUserInfo"></Label>
-        <Button Height="50" Width="250" Click="ExitProfile">Выйти из профиля</Button>
-    </Grid>
+        Title="Личный кабинет администратора" Height="600" Width="800"
+        Background="#FFF" FontFamily="Segoe UI">
+    <Border Background="White" BorderBrush="#DDD" BorderThickness="1" CornerRadius="5" Padding="20">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <!-- Верхняя панель -->
+                <RowDefinition Height="Auto"/>
+                <!-- Информация -->
+                <RowDefinition Height="*"/>
+                <!-- DataGrid -->
+                <RowDefinition Height="Auto"/>
+                <!-- Панель действий -->
+            </Grid.RowDefinitions>
+
+            <!-- Верхняя панель с кнопками -->
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button Content="Выйти" Width="120" Height="40" Margin="5"
+                Background="#007ACC" Foreground="White" BorderThickness="0" Click="ExitProfile"/>
+                <Button Content="Сменить пароль" Width="140" Height="40" Margin="5"
+                Background="#007ACC" Foreground="White" BorderThickness="0" Click="ChangePasswordButton_Click"/>
+            </StackPanel>
+
+            <!-- Информация о пользователе -->
+            <TextBlock x:Name="lblUserInfo" Grid.Row="1" FontSize="18" FontWeight="SemiBold" Foreground="#333" 
+                 Margin="0,10,0,20" TextWrapping="Wrap"/>
+
+            <!-- DataGrid для списка пользователей (без колонки пароля) -->
+            <DataGrid x:Name="UsersDataGrid" Grid.Row="2" AutoGenerateColumns="False" CanUserAddRows="False" 
+                CanUserDeleteRows="False" IsReadOnly="False" RowBackground="White" AlternatingRowBackground="#F9F9F9"
+                RowEditEnding="UsersDataGrid_RowEditEnding">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="ID" Binding="{Binding ID_Пользователя}" IsReadOnly="True" Width="50"/>
+                    <DataGridTextColumn Header="ФИО" Binding="{Binding ФИО}" Width="150"/>
+                    <DataGridTextColumn Header="Логин" Binding="{Binding Логин}" Width="100"/>
+                    <DataGridTextColumn Header="Дата регистрации" Binding="{Binding ДатаРегистрации, StringFormat=d}" IsReadOnly="True" Width="120"/>
+                    <DataGridTextColumn Header="Должность" Binding="{Binding Должность}" IsReadOnly="True" Width="120"/>
+                </DataGrid.Columns>
+            </DataGrid>
+
+            <!-- Панель действий -->
+            <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10,0,0">
+                <Button Content="Добавить" Width="120" Height="40" Margin="5" Click="AddUserButton_Click"/>
+                <Button Content="Удалить" Width="120" Height="40" Margin="5" Click="DeleteUserButton_Click"/>
+                <Button Content="Установить пароль" Width="180" Height="40" Margin="5" Click="SetPasswordButton_Click"/>
+            </StackPanel>
+        </Grid>
+    </Border>
 </Window>

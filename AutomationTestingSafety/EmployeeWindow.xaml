@@ -9,5 +9,6 @@
     <Grid>
         <Label Name="lblUserInfo"></Label>
         <Button Height="50" Width="250" Click="ExitProfile">Выйти из профиля</Button>
+        <Button Height="50" Width="250" Margin="5,5,500,200" Click="ChangePasswordButton_Click">Сменить пароль</Button>
     </Grid>
 </Window>

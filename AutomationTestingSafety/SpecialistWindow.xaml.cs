@@ -20,5 +20,12 @@ namespace AutomationTestingSafety
             loginWindow.Show();
             this.Close();
         }
+
+        private void ChangePasswordButton_Click(object sender, RoutedEventArgs e)
+        {
+            ChangePasswordWindow changePasswordWindow = new ChangePasswordWindow(_userInfo);
+            changePasswordWindow.Owner = this;
+            changePasswordWindow.ShowDialog();
+        }
     }
 }
