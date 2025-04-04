@@ -25,5 +25,12 @@ namespace AutomationTestingSafety
             _userInfo = userInfo;
             lblUserInfo.Content = $"Добро пожаловать, {_userInfo.FullName} (Сотрудник). Дата регистрации: {_userInfo.RegistrationDate:d}";
         }
+
+        private void ExitProfile(object sender, RoutedEventArgs e)
+        {
+            var loginWindow = new MainWindow();
+            loginWindow.Show();
+            this.Close();
+        }
     }
 }
