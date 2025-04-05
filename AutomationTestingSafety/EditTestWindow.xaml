@@ -22,11 +22,14 @@
             <TextBlock Text="Описание:" FontWeight="Bold" Margin="0,10,0,0"/>
             <TextBox x:Name="txtTestDesc" Height="60" AcceptsReturn="True" TextWrapping="Wrap" Margin="0,5"/>
             <StackPanel Orientation="Horizontal" Margin="0,5">
+                <TextBlock Text="Минимальный балл для прохождения:" VerticalAlignment="Center"/>
+                <TextBox x:Name="txtMinScore" Width="100" Margin="5,0"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Margin="0,5">
                 <Button Content="Добавить вопрос" Width="140" Margin="5" Click="AddQuestion_Click"/>
                 <Button Content="Редактировать вопрос" Width="140" Margin="5" Click="EditQuestion_Click"/>
             </StackPanel>
         </StackPanel>
-
 
         <!-- Основной раздел с управлением вопросами и вариантами -->
         <Grid Grid.Row="1" Grid.Column="0">
@@ -50,6 +53,7 @@
                         <GridView>
                             <GridViewColumn Header="Текст ответа" Width="200" DisplayMemberBinding="{Binding Text}"/>
                             <GridViewColumn Header="Правильный" Width="100" DisplayMemberBinding="{Binding IsCorrect}"/>
+                            <GridViewColumn Header="Баллы" Width="80" DisplayMemberBinding="{Binding Points}"/>
                         </GridView>
                     </ListView.View>
                 </ListView>
@@ -80,6 +84,8 @@
                                     <TextBlock Text="{Binding Text}" />
                                     <TextBlock Text=" (" />
                                     <TextBlock Text="{Binding IsCorrect}" />
+                                    <TextBlock Text=", Баллы: " />
+                                    <TextBlock Text="{Binding Points}" />
                                     <TextBlock Text=")"/>
                                 </StackPanel>
                             </DataTemplate>

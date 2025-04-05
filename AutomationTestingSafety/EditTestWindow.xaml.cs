@@ -2,6 +2,7 @@
 using System.Windows.Controls;
 using AutomationTestingSafety.Entities;
 using AutomationTestingSafety;
+using Microsoft.VisualBasic; // для использования Interaction.InputBox
 
 namespace AutomationTestingSafety
 {
@@ -16,6 +17,7 @@ namespace AutomationTestingSafety
             Test = test;
             txtTestName.Text = Test.Name;
             txtTestDesc.Text = Test.Description;
+            txtMinScore.Text = Test.MinimalScore.ToString();
             lvQuestions.ItemsSource = Test.Questions;
             UpdateTestStructureTree();
         }
@@ -38,8 +40,7 @@ namespace AutomationTestingSafety
         {
             if (lvQuestions.SelectedItem is QuestionEntity selectedQuestion)
             {
-                // Редактируем текст вопроса с помощью InputBox (требуется ссылка на Microsoft.VisualBasic)
-                string newText = Microsoft.VisualBasic.Interaction.InputBox("Введите новый текст вопроса:", "Редактирование вопроса", selectedQuestion.Text);
+                string newText = Interaction.InputBox("Введите новый текст вопроса:", "Редактирование вопроса", selectedQuestion.Text);
                 if (!string.IsNullOrWhiteSpace(newText))
                 {
                     selectedQuestion.Text = newText;
@@ -58,6 +59,7 @@ namespace AutomationTestingSafety
             if (lvQuestions.SelectedItem is QuestionEntity question)
             {
                 _selectedQuestion = question;
+                // Предполагается, что список ответов уже находится в question (если нужно, можно дополнительно загружать их)
                 lvAnswers.ItemsSource = _selectedQuestion.Answers;
                 lvAnswers.Items.Refresh();
             }
@@ -75,7 +77,7 @@ namespace AutomationTestingSafety
                 MessageBox.Show("Выберите вопрос для добавления варианта ответа.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
-            _selectedQuestion.Answers.Add(new AnswerEntity { Text = "Новый вариант...", IsCorrect = false });
+            _selectedQuestion.Answers.Add(new AnswerEntity { Text = "Новый вариант...", IsCorrect = false, Points = 0 });
             lvAnswers.Items.Refresh();
             UpdateTestStructureTree();
         }
@@ -98,8 +100,40 @@ namespace AutomationTestingSafety
         {
             if (lvAnswers.SelectedItem is AnswerEntity selectedAnswer)
             {
-                selectedAnswer.Text = Microsoft.VisualBasic.Interaction.InputBox("Введите новый текст ответа:", "Редактирование варианта", selectedAnswer.Text);
-                selectedAnswer.IsCorrect = !selectedAnswer.IsCorrect;
+                // Редактирование текста ответа
+                string newText = Interaction.InputBox("Введите новый текст ответа:", "Редактирование варианта", selectedAnswer.Text);
+                if (!string.IsNullOrWhiteSpace(newText))
+                {
+                    selectedAnswer.Text = newText;
+                }
+
+                // Запрашиваем статус правильности только один раз
+                MessageBoxResult result = MessageBox.Show("Сделать ответ правильным?", "Редактирование варианта", MessageBoxButton.YesNoCancel);
+                if (result == MessageBoxResult.Cancel)
+                {
+                    return; // отмена изменений
+                }
+                else if (result == MessageBoxResult.Yes)
+                {
+                    selectedAnswer.IsCorrect = true;
+                    // Запрашиваем баллы только для правильного ответа
+                    string ptsInput = Interaction.InputBox("Введите количество баллов за ответ:", "Редактирование варианта", selectedAnswer.Points.ToString());
+                    if (int.TryParse(ptsInput, out int pts))
+                    {
+                        selectedAnswer.Points = pts;
+                    }
+                    else
+                    {
+                        MessageBox.Show("Некорректное значение баллов. Баллы не изменены.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    }
+                }
+                else if (result == MessageBoxResult.No)
+                {
+                    // Если выбран No – делаем ответ неправильным и сбрасываем баллы в 0
+                    selectedAnswer.IsCorrect = false;
+                    selectedAnswer.Points = 0;
+                }
+
                 lvAnswers.Items.Refresh();
                 UpdateTestStructureTree();
             }
@@ -109,10 +143,14 @@ namespace AutomationTestingSafety
             }
         }
 
+
         private void SaveTest_Click(object sender, RoutedEventArgs e)
         {
             Test.Name = txtTestName.Text;
             Test.Description = txtTestDesc.Text;
+            if (int.TryParse(txtMinScore.Text, out int minScore))
+                Test.MinimalScore = minScore;
+            // Сохраняем изменения в БД (метод UpdateTest должен обновлять тест, вопросы и варианты ответов)
             TestRepository.UpdateTest(Test);
             MessageBox.Show("Изменения сохранены.", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
             DialogResult = true;

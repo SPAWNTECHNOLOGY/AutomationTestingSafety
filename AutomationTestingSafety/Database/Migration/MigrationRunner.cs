@@ -64,7 +64,7 @@ namespace AutomationTestingSafety.Database
                 InsertUserIfNotExists(connection, "2", "2", "Пётр Петров", "Специалист");
                 InsertUserIfNotExists(connection, "3", "3", "Алексей Алексеев", "Администратор");
 
-                // Создание таблицы Тесты
+                // Создание таблицы Тесты с добавлением поля МинимальныйБалл
                 string createTestsTable = @"
                     IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = N'Тесты')
                     BEGIN
@@ -73,7 +73,8 @@ namespace AutomationTestingSafety.Database
                             ID_Теста INT PRIMARY KEY IDENTITY(1,1),
                             НазваниеТеста NVARCHAR(200) NOT NULL,
                             Активен BIT NOT NULL DEFAULT 0,
-                            Описание NVARCHAR(500) NULL
+                            Описание NVARCHAR(500) NULL,
+                            МинимальныйБалл INT NOT NULL DEFAULT 0
                         )
                     END";
                 using (var command = new SqlCommand(createTestsTable, connection))
@@ -99,7 +100,7 @@ namespace AutomationTestingSafety.Database
                     command.ExecuteNonQuery();
                 }
 
-                // Создание таблицы ВариантыОтветов с полем ID_Вопроса
+                // Создание таблицы ВариантыОтветов с добавлением поля Баллы
                 string createAnswersTable = @"
                     IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = N'ВариантыОтветов')
                     BEGIN
@@ -108,6 +109,7 @@ namespace AutomationTestingSafety.Database
                             ID_Варианта INT PRIMARY KEY IDENTITY(1,1),
                             ТекстВарианта NVARCHAR(500) NOT NULL,
                             Правильный BIT NOT NULL DEFAULT 0,
+                            Баллы INT NOT NULL DEFAULT 0,
                             ID_Вопроса INT NOT NULL,
                             CONSTRAINT FK_ВариантыОтветов_Вопросы FOREIGN KEY (ID_Вопроса)
                                 REFERENCES Вопросы(ID_Вопроса)

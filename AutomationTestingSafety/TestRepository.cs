@@ -99,7 +99,7 @@ namespace AutomationTestingSafety
                 // Получаем варианты ответов для каждого вопроса
                 foreach (var question in test.Questions)
                 {
-                    using (SqlCommand cmdAnswers = new SqlCommand("SELECT ID_Варианта, ТекстВарианта, Правильный FROM ВариантыОтветов WHERE ID_Вопроса = @questionId", connection))
+                    using (SqlCommand cmdAnswers = new SqlCommand("SELECT ID_Варианта, ТекстВарианта, Правильный, Баллы FROM ВариантыОтветов WHERE ID_Вопроса = @questionId", connection))
                     {
                         cmdAnswers.Parameters.AddWithValue("@questionId", question.Id);
                         using (SqlDataReader reader = cmdAnswers.ExecuteReader())
@@ -110,13 +110,15 @@ namespace AutomationTestingSafety
                                 {
                                     Id = Convert.ToInt32(reader["ID_Варианта"]),
                                     Text = reader["ТекстВарианта"].ToString(),
-                                    IsCorrect = Convert.ToBoolean(reader["Правильный"])
+                                    IsCorrect = Convert.ToBoolean(reader["Правильный"]),
+                                    Points = Convert.ToInt32(reader["Баллы"])  // Добавлено для загрузки баллов
                                 };
                                 question.Answers.Add(answer);
                             }
                         }
                     }
                 }
+
             }
             return test;
         }
@@ -126,21 +128,20 @@ namespace AutomationTestingSafety
             using (SqlConnection connection = new SqlConnection(ConnectionString._connectionString))
             {
                 connection.Open();
-                // Обновляем данные теста
-                using (SqlCommand cmdTest = new SqlCommand("UPDATE Тесты SET НазваниеТеста = @name, Описание = @desc, Активен = @active WHERE ID_Теста = @id", connection))
+                // Обновляем данные теста, включая минимальный балл
+                using (SqlCommand cmdTest = new SqlCommand("UPDATE Тесты SET НазваниеТеста = @name, Описание = @desc, Активен = @active, МинимальныйБалл = @minScore WHERE ID_Теста = @id", connection))
                 {
                     cmdTest.Parameters.AddWithValue("@name", test.Name);
                     cmdTest.Parameters.AddWithValue("@desc", test.Description);
                     cmdTest.Parameters.AddWithValue("@active", test.Active);
+                    cmdTest.Parameters.AddWithValue("@minScore", test.MinimalScore);
                     cmdTest.Parameters.AddWithValue("@id", test.Id);
                     cmdTest.ExecuteNonQuery();
                 }
 
-                // Здесь можно реализовать логику обновления вопросов и вариантов ответов:
-                // Например, для каждого вопроса:
+                // Обновляем вопросы и ответы
                 foreach (var question in test.Questions)
                 {
-                    // Если вопрос уже существует (Id > 0) – обновляем его, иначе – вставляем новый
                     if (question.Id > 0)
                     {
                         using (SqlCommand cmdQuestion = new SqlCommand("UPDATE Вопросы SET ТекстВопроса = @text WHERE ID_Вопроса = @id", connection))
@@ -160,25 +161,27 @@ namespace AutomationTestingSafety
                         }
                     }
 
-                    // Аналогично для вариантов ответов
+                    // Обновляем варианты ответов
                     foreach (var answer in question.Answers)
                     {
                         if (answer.Id > 0)
                         {
-                            using (SqlCommand cmdAnswer = new SqlCommand("UPDATE ВариантыОтветов SET ТекстВарианта = @text, Правильный = @correct WHERE ID_Варианта = @id", connection))
+                            using (SqlCommand cmdAnswer = new SqlCommand("UPDATE ВариантыОтветов SET ТекстВарианта = @text, Правильный = @correct, Баллы = @points WHERE ID_Варианта = @id", connection))
                             {
                                 cmdAnswer.Parameters.AddWithValue("@text", answer.Text);
                                 cmdAnswer.Parameters.AddWithValue("@correct", answer.IsCorrect);
+                                cmdAnswer.Parameters.AddWithValue("@points", answer.Points);
                                 cmdAnswer.Parameters.AddWithValue("@id", answer.Id);
                                 cmdAnswer.ExecuteNonQuery();
                             }
                         }
                         else
                         {
-                            using (SqlCommand cmdAnswer = new SqlCommand("INSERT INTO ВариантыОтветов (ТекстВарианта, Правильный, ID_Вопроса) VALUES (@text, @correct, @questionId)", connection))
+                            using (SqlCommand cmdAnswer = new SqlCommand("INSERT INTO ВариантыОтветов (ТекстВарианта, Правильный, Баллы, ID_Вопроса) VALUES (@text, @correct, @points, @questionId)", connection))
                             {
                                 cmdAnswer.Parameters.AddWithValue("@text", answer.Text);
                                 cmdAnswer.Parameters.AddWithValue("@correct", answer.IsCorrect);
+                                cmdAnswer.Parameters.AddWithValue("@points", answer.Points);
                                 cmdAnswer.Parameters.AddWithValue("@questionId", question.Id);
                                 cmdAnswer.ExecuteNonQuery();
                             }
@@ -187,5 +190,6 @@ namespace AutomationTestingSafety
                 }
             }
         }
+
     }
 }

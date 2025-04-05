@@ -30,6 +30,7 @@ namespace AutomationTestingSafety
         public string Name { get; set; }           // Название теста
         public string Description { get; set; }      // Описание теста
         public bool Active { get; set; }             // Статус теста
+        public int MinimalScore { get; set; }        // Минимальный балл для прохождения теста
         public List<QuestionEntity> Questions { get; set; } = new List<QuestionEntity>();
     }
 
@@ -44,6 +45,7 @@ namespace AutomationTestingSafety
     {
         public int Id { get; set; }
         public string Text { get; set; }             // Текст варианта ответа
-        public bool IsCorrect { get; set; }          // Правильный ли ответ
+        public bool IsCorrect { get; set; }          // Флаг: правильный ответ или нет
+        public int Points { get; set; }              // Количество баллов за этот вариант ответа
     }
 }
