@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 using AutomationTestingSafety.Entities;
-using Microsoft.VisualBasic;
+using AutomationTestingSafety;
 
 namespace AutomationTestingSafety
 {
@@ -14,18 +14,43 @@ namespace AutomationTestingSafety
         {
             InitializeComponent();
             Test = test;
-            // Инициализация полей
             txtTestName.Text = Test.Name;
             txtTestDesc.Text = Test.Description;
             lvQuestions.ItemsSource = Test.Questions;
+            UpdateTestStructureTree();
+        }
+
+        private void UpdateTestStructureTree()
+        {
+            tvTestStructure.ItemsSource = null;
+            tvTestStructure.ItemsSource = Test.Questions;
         }
 
         private void AddQuestion_Click(object sender, RoutedEventArgs e)
         {
-            // Добавление нового вопроса
             var newQuestion = new QuestionEntity { Text = "Новый вопрос..." };
             Test.Questions.Add(newQuestion);
             lvQuestions.Items.Refresh();
+            UpdateTestStructureTree();
+        }
+
+        private void EditQuestion_Click(object sender, RoutedEventArgs e)
+        {
+            if (lvQuestions.SelectedItem is QuestionEntity selectedQuestion)
+            {
+                // Редактируем текст вопроса с помощью InputBox (требуется ссылка на Microsoft.VisualBasic)
+                string newText = Microsoft.VisualBasic.Interaction.InputBox("Введите новый текст вопроса:", "Редактирование вопроса", selectedQuestion.Text);
+                if (!string.IsNullOrWhiteSpace(newText))
+                {
+                    selectedQuestion.Text = newText;
+                    lvQuestions.Items.Refresh();
+                    UpdateTestStructureTree();
+                }
+            }
+            else
+            {
+                MessageBox.Show("Выберите вопрос для редактирования.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
         }
 
         private void lvQuestions_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -50,9 +75,9 @@ namespace AutomationTestingSafety
                 MessageBox.Show("Выберите вопрос для добавления варианта ответа.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
-            // Добавление нового варианта ответа
             _selectedQuestion.Answers.Add(new AnswerEntity { Text = "Новый вариант...", IsCorrect = false });
             lvAnswers.Items.Refresh();
+            UpdateTestStructureTree();
         }
 
         private void DeleteAnswer_Click(object sender, RoutedEventArgs e)
@@ -61,6 +86,7 @@ namespace AutomationTestingSafety
             {
                 _selectedQuestion.Answers.Remove(selectedAnswer);
                 lvAnswers.Items.Refresh();
+                UpdateTestStructureTree();
             }
             else
             {
@@ -72,13 +98,10 @@ namespace AutomationTestingSafety
         {
             if (lvAnswers.SelectedItem is AnswerEntity selectedAnswer)
             {
-                // Пример: откроем окно редактирования варианта ответа или просто изменим его свойства через InputBox
-                // Здесь для простоты – меняем текст и переключаем правильность
-                selectedAnswer.Text = Interaction.InputBox("Введите новый текст ответа:", "Редактирование варианта", selectedAnswer.Text);
-
-                // Переключаем флаг правильного (это можно заменить более удобным UI)
+                selectedAnswer.Text = Microsoft.VisualBasic.Interaction.InputBox("Введите новый текст ответа:", "Редактирование варианта", selectedAnswer.Text);
                 selectedAnswer.IsCorrect = !selectedAnswer.IsCorrect;
                 lvAnswers.Items.Refresh();
+                UpdateTestStructureTree();
             }
             else
             {
@@ -88,14 +111,9 @@ namespace AutomationTestingSafety
 
         private void SaveTest_Click(object sender, RoutedEventArgs e)
         {
-            // Обновляем данные теста
             Test.Name = txtTestName.Text;
             Test.Description = txtTestDesc.Text;
-            // Здесь можно добавить дополнительные проверки и валидацию
-
-            // Сохраняем изменения в БД через репозиторий (метод UpdateTest обновит тест, вопросы и ответы)
             TestRepository.UpdateTest(Test);
-
             MessageBox.Show("Изменения сохранены.", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
             DialogResult = true;
             Close();

@@ -1,6 +1,7 @@
 ﻿<Window x:Class="AutomationTestingSafety.SpecialistWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:AutomationTestingSafety"
         Title="Личный кабинет специалиста" Height="700" Width="1000"
         WindowStartupLocation="CenterScreen" Background="#FFF" FontFamily="Segoe UI">
     <Grid Margin="10">
@@ -21,21 +22,49 @@
             </StackPanel>
         </DockPanel>
 
-        <!-- Список тестов -->
-        <ListView x:Name="lvTests" Grid.Row="1" SelectionMode="Single">
-            <ListView.View>
-                <GridView>
-                    <GridViewColumn Header="Название" DisplayMemberBinding="{Binding Name}" Width="250"/>
-                    <GridViewColumn Header="Описание" DisplayMemberBinding="{Binding Description}" Width="500"/>
-                </GridView>
-            </ListView.View>
-        </ListView>
+        <!-- Основной контент: левый столбец - список тестов, правый - дерево структуры выбранного теста -->
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <!-- Список тестов -->
+            <ListView x:Name="lvTests" Grid.Column="0" SelectionMode="Single" SelectionChanged="lvTests_SelectionChanged">
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Header="Название" DisplayMemberBinding="{Binding Name}" Width="250"/>
+                        <GridViewColumn Header="Описание" DisplayMemberBinding="{Binding Description}" Width="500"/>
+                    </GridView>
+                </ListView.View>
+            </ListView>
+            <!-- Дерево структуры теста для просмотра -->
+            <GroupBox Header="Структура теста" Grid.Column="1" Margin="10,0,0,0">
+                <TreeView x:Name="tvTestStructure">
+                    <TreeView.Resources>
+                        <!-- Шаблон для вопросов с вариантами ответов -->
+                        <HierarchicalDataTemplate DataType="{x:Type local:QuestionEntity}" ItemsSource="{Binding Answers}">
+                            <TextBlock Text="{Binding Text}" />
+                            <HierarchicalDataTemplate.ItemTemplate>
+                                <DataTemplate DataType="{x:Type local:AnswerEntity}">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="{Binding Text}" />
+                                        <TextBlock Text=" (" />
+                                        <TextBlock Text="{Binding IsCorrect}" />
+                                        <TextBlock Text=")" />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </HierarchicalDataTemplate.ItemTemplate>
+                        </HierarchicalDataTemplate>
+                    </TreeView.Resources>
+                </TreeView>
+            </GroupBox>
+        </Grid>
 
         <!-- Панель управления -->
         <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10,0,0">
             <Button Content="Добавить тест" Width="140" Margin="5" Click="AddTest_Click"/>
             <Button Content="Редактировать тест" Width="140" Margin="5" Click="EditTest_Click"/>
-            <!-- Можно добавить кнопки для удаления теста и т.п. -->
+            <!-- Можно добавить кнопки для удаления теста и прочее -->
         </StackPanel>
     </Grid>
 </Window>

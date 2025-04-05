@@ -1,24 +1,35 @@
 ﻿<Window x:Class="AutomationTestingSafety.EditTestWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Редактирование теста" Height="600" Width="900"
+        xmlns:local="clr-namespace:AutomationTestingSafety"
+        Title="Редактирование теста" Height="600" Width="1000"
         WindowStartupLocation="CenterScreen">
     <Grid Margin="10">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="3*"/>
+            <ColumnDefinition Width="2*"/>
+        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <!-- Редактирование основных данных теста -->
-        <StackPanel Orientation="Vertical" Grid.Row="0" Margin="0,0,0,10">
+
+        <!-- Редактирование основных данных теста и управление вопросами -->
+        <StackPanel Orientation="Vertical" Grid.Row="0" Grid.Column="0" Margin="0,0,10,10">
             <TextBlock Text="Название теста:" FontWeight="Bold"/>
             <TextBox x:Name="txtTestName" Height="30" Margin="0,5"/>
             <TextBlock Text="Описание:" FontWeight="Bold" Margin="0,10,0,0"/>
             <TextBox x:Name="txtTestDesc" Height="60" AcceptsReturn="True" TextWrapping="Wrap" Margin="0,5"/>
-            <Button Content="Добавить вопрос" Width="140" Margin="0,5" Click="AddQuestion_Click"/>
+            <StackPanel Orientation="Horizontal" Margin="0,5">
+                <Button Content="Добавить вопрос" Width="140" Margin="5" Click="AddQuestion_Click"/>
+                <Button Content="Редактировать вопрос" Width="140" Margin="5" Click="EditQuestion_Click"/>
+            </StackPanel>
         </StackPanel>
-        <!-- Раздел для списка вопросов и вариантов ответов -->
-        <Grid Grid.Row="1">
+
+
+        <!-- Основной раздел с управлением вопросами и вариантами -->
+        <Grid Grid.Row="1" Grid.Column="0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="2*"/>
                 <ColumnDefinition Width="3*"/>
@@ -49,10 +60,33 @@
                 </StackPanel>
             </StackPanel>
         </Grid>
+
         <!-- Панель сохранения изменений -->
-        <StackPanel Orientation="Horizontal" Grid.Row="2" HorizontalAlignment="Center" Margin="0,10,0,0">
+        <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.Column="0" HorizontalAlignment="Center" Margin="0,10,0,0">
             <Button Content="Сохранить" Width="120" Margin="10" Click="SaveTest_Click"/>
             <Button Content="Отмена" Width="120" Margin="10" Click="Cancel_Click"/>
         </StackPanel>
+
+        <!-- Дерево структуры теста -->
+        <GroupBox Header="Структура теста" Grid.Row="0" Grid.RowSpan="3" Grid.Column="1" Margin="10,0,0,0">
+            <TreeView x:Name="tvTestStructure">
+                <TreeView.Resources>
+                    <!-- Шаблон для вопросов, внутри которого отображаются варианты ответов -->
+                    <HierarchicalDataTemplate DataType="{x:Type local:QuestionEntity}" ItemsSource="{Binding Answers}">
+                        <TextBlock Text="{Binding Text}" />
+                        <HierarchicalDataTemplate.ItemTemplate>
+                            <DataTemplate DataType="{x:Type local:AnswerEntity}">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="{Binding Text}" />
+                                    <TextBlock Text=" (" />
+                                    <TextBlock Text="{Binding IsCorrect}" />
+                                    <TextBlock Text=")"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </HierarchicalDataTemplate.ItemTemplate>
+                    </HierarchicalDataTemplate>
+                </TreeView.Resources>
+            </TreeView>
+        </GroupBox>
     </Grid>
 </Window>

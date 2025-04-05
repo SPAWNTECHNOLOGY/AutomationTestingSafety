@@ -1,5 +1,4 @@
-﻿using System;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 using AutomationTestingSafety.Entities;
 
@@ -31,7 +30,7 @@ namespace AutomationTestingSafety
                 Active = false
             };
 
-            // Получаем Id вновь созданного теста (если необходимо)
+            // Создаем тест в БД и получаем его Id (если требуется)
             newTest.Id = TestRepository.CreateTest(newTest);
             LoadTests();
         }
@@ -48,9 +47,10 @@ namespace AutomationTestingSafety
                     editWindow.Owner = this;
                     if (editWindow.ShowDialog() == true)
                     {
-                        // Сохраняем изменения через репозиторий
-                        TestRepository.UpdateTest(test);
+                        // Обновляем список тестов после редактирования
                         LoadTests();
+                        // При изменении структуры теста также обновляем дерево
+                        tvTestStructure.ItemsSource = null;
                     }
                 }
             }
@@ -60,18 +60,29 @@ namespace AutomationTestingSafety
             }
         }
 
+        private void lvTests_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (lvTests.SelectedItem is TestEntity test)
+            {
+                // Загружаем полную структуру теста (с вопросами и ответами)
+                TestEntity fullTest = TestRepository.GetTestById(test.Id);
+                // Заполняем дерево структуры теста только вопросами (с вариантами)
+                tvTestStructure.ItemsSource = fullTest?.Questions;
+            }
+            else
+            {
+                tvTestStructure.ItemsSource = null;
+            }
+        }
+
         private void ChangePasswordButton_Click(object sender, RoutedEventArgs e)
         {
-            ChangePasswordWindow changePasswordWindow = new ChangePasswordWindow(_userInfo);
-            changePasswordWindow.Owner = this;
-            changePasswordWindow.ShowDialog();
+            // Реализация смены пароля
         }
 
         private void ExitProfile(object sender, RoutedEventArgs e)
         {
-            var loginWindow = new MainWindow();
-            loginWindow.Show();
-            this.Close();
+            // Реализация выхода из профиля
         }
     }
 }
