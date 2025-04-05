@@ -20,6 +20,7 @@ namespace AutomationTestingSafety
             txtMinScore.Text = Test.MinimalScore.ToString();
             lvQuestions.ItemsSource = Test.Questions;
             UpdateTestStructureTree();
+            groupBoxTestStructure.Header = $"Структура теста (Минимальный балл: {Test.MinimalScore})";
         }
 
         private void UpdateTestStructureTree()
@@ -162,5 +163,28 @@ namespace AutomationTestingSafety
             DialogResult = false;
             Close();
         }
+
+        private void DeleteQuestion_Click(object sender, RoutedEventArgs e)
+        {
+            if (lvQuestions.SelectedItem is QuestionEntity selectedQuestion)
+            {
+                var result = MessageBox.Show("Вы уверены, что хотите удалить выбранный вопрос?", "Подтверждение удаления", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                if (result == MessageBoxResult.Yes)
+                {
+                    // Удаляем вопрос из БД
+                    TestRepository.DeleteQuestion(selectedQuestion.Id);
+                    // Затем удаляем вопрос из коллекции теста
+                    Test.Questions.Remove(selectedQuestion);
+                    lvQuestions.Items.Refresh();
+                    lvAnswers.ItemsSource = null;
+                    UpdateTestStructureTree();
+                }
+            }
+            else
+            {
+                MessageBox.Show("Выберите вопрос для удаления.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
+        }
+
     }
 }

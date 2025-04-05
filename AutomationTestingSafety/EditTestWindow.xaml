@@ -28,6 +28,7 @@
             <StackPanel Orientation="Horizontal" Margin="0,5">
                 <Button Content="Добавить вопрос" Width="140" Margin="5" Click="AddQuestion_Click"/>
                 <Button Content="Редактировать вопрос" Width="140" Margin="5" Click="EditQuestion_Click"/>
+                <Button Content="Удалить вопрос" Width="140" Margin="5" Click="DeleteQuestion_Click"/>
             </StackPanel>
         </StackPanel>
 
@@ -71,8 +72,8 @@
             <Button Content="Отмена" Width="120" Margin="10" Click="Cancel_Click"/>
         </StackPanel>
 
-        <!-- Дерево структуры теста -->
-        <GroupBox Header="Структура теста" Grid.Row="0" Grid.RowSpan="3" Grid.Column="1" Margin="10,0,0,0">
+        <!-- Дерево структуры теста с отображением минимального балла -->
+        <GroupBox x:Name="groupBoxTestStructure" Grid.Row="0" Grid.RowSpan="3" Grid.Column="1" Margin="10,0,0,0">
             <TreeView x:Name="tvTestStructure">
                 <TreeView.Resources>
                     <!-- Шаблон для вопросов, внутри которого отображаются варианты ответов -->

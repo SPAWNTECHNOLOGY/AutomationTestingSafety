@@ -15,7 +15,7 @@ namespace AutomationTestingSafety
             using (SqlConnection connection = new SqlConnection(ConnectionString._connectionString))
             {
                 connection.Open();
-                using (SqlCommand cmd = new SqlCommand("SELECT ID_Теста, НазваниеТеста, Описание, Активен FROM Тесты", connection))
+                using (SqlCommand cmd = new SqlCommand("SELECT ID_Теста, НазваниеТеста, Описание, Активен, МинимальныйБалл FROM Тесты", connection))
                 using (SqlDataReader reader = cmd.ExecuteReader())
                 {
                     while (reader.Read())
@@ -25,7 +25,8 @@ namespace AutomationTestingSafety
                             Id = Convert.ToInt32(reader["ID_Теста"]),
                             Name = reader["НазваниеТеста"].ToString(),
                             Description = reader["Описание"].ToString(),
-                            Active = Convert.ToBoolean(reader["Активен"])
+                            Active = Convert.ToBoolean(reader["Активен"]),
+                            MinimalScore = Convert.ToInt32(reader["МинимальныйБалл"])
                         });
                     }
                 }
@@ -58,7 +59,7 @@ namespace AutomationTestingSafety
                 connection.Open();
 
                 // Получаем информацию о тесте
-                using (SqlCommand cmdTest = new SqlCommand("SELECT ID_Теста, НазваниеТеста, Описание, Активен FROM Тесты WHERE ID_Теста = @id", connection))
+                using (SqlCommand cmdTest = new SqlCommand("SELECT ID_Теста, НазваниеТеста, Описание, Активен, МинимальныйБалл  FROM Тесты WHERE ID_Теста = @id", connection))
                 {
                     cmdTest.Parameters.AddWithValue("@id", testId);
                     using (SqlDataReader reader = cmdTest.ExecuteReader())
@@ -70,7 +71,8 @@ namespace AutomationTestingSafety
                                 Id = Convert.ToInt32(reader["ID_Теста"]),
                                 Name = reader["НазваниеТеста"].ToString(),
                                 Description = reader["Описание"].ToString(),
-                                Active = Convert.ToBoolean(reader["Активен"])
+                                Active = Convert.ToBoolean(reader["Активен"]),
+                                MinimalScore = Convert.ToInt32(reader["МинимальныйБалл"])
                             };
                         }
                     }
@@ -187,6 +189,62 @@ namespace AutomationTestingSafety
                             }
                         }
                     }
+                }
+            }
+        }
+
+        public static void DeleteTest(int testId)
+        {
+            using (SqlConnection connection = new SqlConnection(ConnectionString._connectionString))
+            {
+                connection.Open();
+
+                // Сначала удаляем варианты ответов для вопросов теста
+                string deleteAnswers = "DELETE FROM ВариантыОтветов WHERE ID_Вопроса IN (SELECT ID_Вопроса FROM Вопросы WHERE ID_Теста = @testId)";
+                using (SqlCommand cmd = new SqlCommand(deleteAnswers, connection))
+                {
+                    cmd.Parameters.AddWithValue("@testId", testId);
+                    cmd.ExecuteNonQuery();
+                }
+
+                // Затем удаляем вопросы теста
+                string deleteQuestions = "DELETE FROM Вопросы WHERE ID_Теста = @testId";
+                using (SqlCommand cmd = new SqlCommand(deleteQuestions, connection))
+                {
+                    cmd.Parameters.AddWithValue("@testId", testId);
+                    cmd.ExecuteNonQuery();
+                }
+
+                // Наконец, удаляем сам тест
+                string deleteTest = "DELETE FROM Тесты WHERE ID_Теста = @testId";
+                using (SqlCommand cmd = new SqlCommand(deleteTest, connection))
+                {
+                    cmd.Parameters.AddWithValue("@testId", testId);
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
+        public static void DeleteQuestion(int questionId)
+        {
+            using (SqlConnection connection = new SqlConnection(ConnectionString._connectionString))
+            {
+                connection.Open();
+
+                // Сначала удаляем варианты ответов для данного вопроса
+                string deleteAnswers = "DELETE FROM ВариантыОтветов WHERE ID_Вопроса = @questionId";
+                using (SqlCommand cmd = new SqlCommand(deleteAnswers, connection))
+                {
+                    cmd.Parameters.AddWithValue("@questionId", questionId);
+                    cmd.ExecuteNonQuery();
+                }
+
+                // Затем удаляем сам вопрос
+                string deleteQuestion = "DELETE FROM Вопросы WHERE ID_Вопроса = @questionId";
+                using (SqlCommand cmd = new SqlCommand(deleteQuestion, connection))
+                {
+                    cmd.Parameters.AddWithValue("@questionId", questionId);
+                    cmd.ExecuteNonQuery();
                 }
             }
         }

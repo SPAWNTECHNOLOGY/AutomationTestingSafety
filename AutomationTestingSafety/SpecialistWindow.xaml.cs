@@ -1,5 +1,7 @@
-﻿using System.Windows;
+﻿using System.Data.SqlClient;
+using System.Windows;
 using System.Windows.Controls;
+using AutomationTestingSafety.Database;
 using AutomationTestingSafety.Entities;
 
 namespace AutomationTestingSafety
@@ -84,5 +86,28 @@ namespace AutomationTestingSafety
         {
             // Реализация выхода из профиля
         }
+
+        private void DeleteTest_Click(object sender, RoutedEventArgs e)
+        {
+            if (lvTests.SelectedItem is TestEntity selectedTest)
+            {
+                var result = MessageBox.Show("Вы уверены, что хотите удалить выбранный тест?", "Подтверждение удаления", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                if (result == MessageBoxResult.Yes)
+                {
+                    // Здесь можно вызвать метод репозитория для удаления теста из БД, например:
+                    TestRepository.DeleteTest(selectedTest.Id);
+                    // Обновляем список тестов
+                    LoadTests();
+                    // Очищаем дерево структуры, если удалённый тест был выбран
+                    tvTestStructure.ItemsSource = null;
+                }
+            }
+            else
+            {
+                MessageBox.Show("Выберите тест для удаления.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
+        }
+       
+
     }
 }
