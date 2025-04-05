@@ -1,0 +1,40 @@
+﻿<Window x:Class="AutomationTestingSafety.TreeView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:AutomationTestingSafety"
+        mc:Ignorable="d"
+        Title="TreeView" Height="450" Width="800">
+    <Grid>
+        <TreeView ItemsSource="{Binding Tests}">
+            <!-- Шаблон для тестов -->
+            <TreeView.ItemTemplate>
+                <HierarchicalDataTemplate ItemsSource="{Binding Questions}">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{Binding НазваниеТеста}" FontWeight="Bold"/>
+                        <TextBlock Text=" ("/>
+                        <TextBlock Text="{Binding Активен}" />
+                        <TextBlock Text=")"/>
+                    </StackPanel>
+                    <!-- Шаблон для вопросов -->
+                    <HierarchicalDataTemplate.ItemTemplate>
+                        <HierarchicalDataTemplate ItemsSource="{Binding Answers}">
+                            <TextBlock Text="{Binding ТекстВопроса}" />
+                            <!-- Шаблон для вариантов ответов -->
+                            <HierarchicalDataTemplate.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="{Binding ТекстВарианта}" />
+                                        <TextBlock Text=" - " />
+                                        <TextBlock Text="{Binding Правильный}" />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </HierarchicalDataTemplate.ItemTemplate>
+                        </HierarchicalDataTemplate>
+                    </HierarchicalDataTemplate.ItemTemplate>
+                </HierarchicalDataTemplate>
+            </TreeView.ItemTemplate>
+        </TreeView>
+    </Grid>
+</Window>

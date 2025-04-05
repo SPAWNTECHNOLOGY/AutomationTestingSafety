@@ -18,7 +18,7 @@ namespace AutomationTestingSafety.Database
             {
                 connection.Open();
 
-                // Создание таблицы Должности, если её нет
+                // Создание таблицы Должности
                 string createPositionsTable = @"
                     IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = N'Должности')
                     BEGIN
@@ -33,7 +33,7 @@ namespace AutomationTestingSafety.Database
                     command.ExecuteNonQuery();
                 }
 
-                // Создание таблицы Пользователи, если её нет
+                // Создание таблицы Пользователи
                 string createUsersTable = @"
                     IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = N'Пользователи')
                     BEGIN
@@ -60,9 +60,63 @@ namespace AutomationTestingSafety.Database
                 InsertPositionIfNotExists(connection, "Администратор");
 
                 // Добавление пользователей
-                InsertUserIfNotExists(connection, "employee", "employee123", "Иван Иванов", "Сотрудник");
-                InsertUserIfNotExists(connection, "specialist", "specialist123", "Пётр Петров", "Специалист");
-                InsertUserIfNotExists(connection, "admin", "admin123", "Алексей Алексеев", "Администратор");
+                InsertUserIfNotExists(connection, "1", "1", "Иван Иванов", "Сотрудник");
+                InsertUserIfNotExists(connection, "2", "2", "Пётр Петров", "Специалист");
+                InsertUserIfNotExists(connection, "3", "3", "Алексей Алексеев", "Администратор");
+
+                // Создание таблицы Тесты
+                string createTestsTable = @"
+                    IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = N'Тесты')
+                    BEGIN
+                        CREATE TABLE Тесты
+                        (
+                            ID_Теста INT PRIMARY KEY IDENTITY(1,1),
+                            НазваниеТеста NVARCHAR(200) NOT NULL,
+                            Активен BIT NOT NULL DEFAULT 0,
+                            Описание NVARCHAR(500) NULL
+                        )
+                    END";
+                using (var command = new SqlCommand(createTestsTable, connection))
+                {
+                    command.ExecuteNonQuery();
+                }
+
+                // Создание таблицы Вопросы с полем ID_Теста
+                string createQuestionsTable = @"
+                    IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = N'Вопросы')
+                    BEGIN
+                        CREATE TABLE Вопросы
+                        (
+                            ID_Вопроса INT PRIMARY KEY IDENTITY(1,1),
+                            ТекстВопроса NVARCHAR(500) NOT NULL,
+                            ID_Теста INT NOT NULL,
+                            CONSTRAINT FK_Вопросы_Тесты FOREIGN KEY (ID_Теста)
+                                REFERENCES Тесты(ID_Теста)
+                        )
+                    END";
+                using (var command = new SqlCommand(createQuestionsTable, connection))
+                {
+                    command.ExecuteNonQuery();
+                }
+
+                // Создание таблицы ВариантыОтветов с полем ID_Вопроса
+                string createAnswersTable = @"
+                    IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = N'ВариантыОтветов')
+                    BEGIN
+                        CREATE TABLE ВариантыОтветов
+                        (
+                            ID_Варианта INT PRIMARY KEY IDENTITY(1,1),
+                            ТекстВарианта NVARCHAR(500) NOT NULL,
+                            Правильный BIT NOT NULL DEFAULT 0,
+                            ID_Вопроса INT NOT NULL,
+                            CONSTRAINT FK_ВариантыОтветов_Вопросы FOREIGN KEY (ID_Вопроса)
+                                REFERENCES Вопросы(ID_Вопроса)
+                        )
+                    END";
+                using (var command = new SqlCommand(createAnswersTable, connection))
+                {
+                    command.ExecuteNonQuery();
+                }
             }
         }
 
