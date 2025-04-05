@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Threading;
@@ -16,7 +17,7 @@ namespace AutomationTestingSafety
         public EmployeeTestWindow(TestEntity test)
         {
             InitializeComponent();
-            // Перезагружаем тест из БД, чтобы гарантированно получить вопросы и варианты
+            // Перезагружаем тест из БД, чтобы гарантированно получить заполненные вопросы и варианты ответов
             _test = TestRepository.GetTestById(test.Id);
             if (_test == null || _test.Questions.Count == 0)
             {
@@ -51,7 +52,7 @@ namespace AutomationTestingSafety
 
             var question = _test.Questions[_currentQuestionIndex];
             tbQuestion.Text = question.Text;
-            // Привязываем список вариантов ответа напрямую из Question.Answers
+            // Привязываем список ответов напрямую (свойство IsSelected присутствует в AnswerEntity)
             lbAnswers.ItemsSource = question.Answers;
         }
 
@@ -71,6 +72,11 @@ namespace AutomationTestingSafety
                 _currentQuestionIndex++;
                 LoadCurrentQuestion();
             }
+            else
+            {
+                // Если последний вопрос, можно сразу завершить тест
+                FinishTest();
+            }
         }
 
         private void FinishButton_Click(object sender, RoutedEventArgs e)
@@ -82,16 +88,47 @@ namespace AutomationTestingSafety
         private void FinishTest()
         {
             int totalScore = 0;
-            // Проходим по всем вопросам и суммируем баллы за выбранные варианты
+            var results = new List<ResultItem>();
+
+            // Собираем результаты для каждого вопроса
             foreach (var question in _test.Questions)
             {
-                // Если пользователь выбрал правильный вариант, прибавляем баллы
-                var selected = question.Answers.FirstOrDefault(a => a.IsSelected);
-                if (selected != null && selected.IsCorrect)
-                    totalScore += selected.Points;
+                var correct = question.Answers.FirstOrDefault(a => a.IsCorrect);
+                var userAnswer = question.Answers.FirstOrDefault(a => a.IsSelected);
+                string correctText = correct != null ? correct.Text : "Нет";
+                string userText = userAnswer != null ? userAnswer.Text : "Не выбран";
+                string resultText = (userAnswer != null && userAnswer.IsCorrect) ? "Правильно" : "Неправильно";
+                if (userAnswer != null && userAnswer.IsCorrect)
+                    totalScore += userAnswer.Points;
+
+                results.Add(new ResultItem
+                {
+                    QuestionText = question.Text,
+                    YourAnswer = userText,
+                    CorrectAnswer = correctText,
+                    IsCorrectText = resultText
+                });
             }
-            MessageBox.Show($"Ваш результат: {totalScore} баллов.", "Результаты теста", MessageBoxButton.OK, MessageBoxImage.Information);
+
+            // Вычисляем время прохождения
+            TimeSpan timeTaken = TimeSpan.FromMinutes(15) - _timeRemaining;
+            // Определяем статус прохождения
+            string status = totalScore >= _test.MinimalScore ? "Сдал" : "Не сдал";
+            string summary = $"Тест завершен.\nВремя прохождения: {timeTaken:mm\\:ss}.\n" +
+                             $"Набрано баллов: {totalScore} (Мин. требуемо: {_test.MinimalScore}).\nСтатус: {status}.";
+
+            EmployeeTestResultWindow resultWindow = new EmployeeTestResultWindow(summary, results);
+            resultWindow.Owner = this;
+            resultWindow.ShowDialog();
             Close();
         }
+    }
+
+    public class ResultItem
+    {
+        public string QuestionText { get; set; }
+        public string YourAnswer { get; set; }
+        public string CorrectAnswer { get; set; }
+        public string IsCorrectText { get; set; }
     }
 }

@@ -2,24 +2,55 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Прохождение теста" Height="600" Width="800"
-        WindowStartupLocation="CenterScreen">
-    <Grid Margin="10">
+        WindowStartupLocation="CenterScreen"
+        Background="#F5F5F5" FontFamily="Segoe UI">
+    <Window.Resources>
+        <!-- Стиль для кнопок, как в предыдущем примере -->
+        <Style TargetType="Button">
+            <Setter Property="Background" Value="#007ACC"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="Padding" Value="5,2"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Height" Value="40"/>
+            <Setter Property="Width" Value="120"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                CornerRadius="5">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#005A9E"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+    <Grid Margin="20">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <!-- Таймер -->
-        <TextBlock x:Name="tbTimer" FontSize="20" FontWeight="Bold" HorizontalAlignment="Right"/>
-        <!-- Блок с вопросом и вариантами ответов -->
-        <StackPanel Grid.Row="1" Margin="20">
+        <TextBlock x:Name="tbTimer" FontSize="20" FontWeight="Bold" HorizontalAlignment="Right" Margin="0,0,0,10"/>
+        <!-- Вопрос и варианты ответов -->
+        <StackPanel Grid.Row="1" Background="White">
             <TextBlock x:Name="tbQuestion" FontSize="18" TextWrapping="Wrap" Margin="0,0,0,10"/>
             <ListBox x:Name="lbAnswers">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <RadioButton GroupName="AnswersGroup" 
                                      Content="{Binding Text}" 
-                                     Tag="{Binding ID}" 
+                                     Tag="{Binding Id}" 
                                      IsChecked="{Binding IsSelected, Mode=TwoWay}"/>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
@@ -27,9 +58,9 @@
         </StackPanel>
         <!-- Панель навигации -->
         <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center" Margin="10">
-            <Button Content="Предыдущий" Width="120" Margin="5" Click="PrevButton_Click"/>
-            <Button Content="Следующий" Width="120" Margin="5" Click="NextButton_Click"/>
-            <Button Content="Завершить тест" Width="120" Margin="5" Click="FinishButton_Click"/>
+            <Button Content="Предыдущий" Click="PrevButton_Click"/>
+            <Button Content="Следующий" Click="NextButton_Click"/>
+            <Button Content="Завершить тест" Click="FinishButton_Click"/>
         </StackPanel>
     </Grid>
 </Window>
