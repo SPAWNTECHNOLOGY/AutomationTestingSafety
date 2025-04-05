@@ -197,20 +197,24 @@ namespace AutomationTestingSafety
         {
             if (UsersDataGrid.SelectedItem is DataRowView row)
             {
+                if (row["ID_Пользователя"] == DBNull.Value)
+                {
+                    MessageBox.Show("Ошибка: ID пользователя не задан.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
                 int userId = Convert.ToInt32(row["ID_Пользователя"]);
-                string userFio = Convert.ToString(row["ФИО"]);
-                // Получаем результаты тестов для данного пользователя
+                string employeeFio = row["ФИО"].ToString();
                 List<TestResult> results = TestRepository.GetTestResultsForUser(userId);
-                // Создаем окно результатов, передавая userId и результаты
-                var win = new AdminTestResultsWindow(userId, userFio, results);
+                var win = new AdminTestResultsWindow(userId, employeeFio, results);
                 win.Owner = this;
                 win.ShowDialog();
             }
             else
             {
-                MessageBox.Show("Выберите пользователя для просмотра результатов тестов.", "Информация", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show("Пожалуйста, выберите пользователя.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }
+
 
     }
 }

@@ -24,8 +24,8 @@
             </DataGrid.Columns>
 
         </DataGrid>
-        <!-- Кнопка закрытия -->
         <StackPanel Grid.Row="2" HorizontalAlignment="Center" Margin="10">
+            <Button Content="Экспортировать результат" Width="180" Height="40" Click="ExportButton_Click"/>
             <Button Content="Закрыть" Width="120" Height="40" Click="CloseButton_Click"/>
         </StackPanel>
     </Grid>
