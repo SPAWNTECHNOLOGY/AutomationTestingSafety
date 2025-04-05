@@ -53,9 +53,10 @@ namespace AutomationTestingSafety
 
     public class AnswerEntity
     {
-        public int Id { get; set; }
-        public string Text { get; set; }             // Текст варианта ответа
-        public bool IsCorrect { get; set; }          // Флаг: правильный ответ или нет
-        public int Points { get; set; }              // Количество баллов за этот вариант ответа
+        public int ID { get; set; }
+        public string Text { get; set; }
+        public bool IsCorrect { get; set; }
+        public int Points { get; set; }
+        public bool IsSelected { get; set; }
     }
 }

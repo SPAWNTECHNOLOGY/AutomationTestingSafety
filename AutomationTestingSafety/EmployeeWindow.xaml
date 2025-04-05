@@ -1,14 +1,33 @@
 ﻿<Window x:Class="AutomationTestingSafety.EmployeeWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AutomationTestingSafety"
-        mc:Ignorable="d"
-        Title="Личный кабинет сотрудника" Height="450" Width="800">
-    <Grid>
-        <Label Name="lblUserInfo"></Label>
-        <Button Height="50" Width="250" Click="ExitProfile">Выйти из профиля</Button>
-        <Button Height="50" Width="250" Margin="5,5,500,200" Click="ChangePasswordButton_Click">Сменить пароль</Button>
+        Title="Личный кабинет сотрудника" Height="450" Width="800"
+        WindowStartupLocation="CenterScreen" Background="#FFF" FontFamily="Segoe UI">
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <!-- Верхняя панель -->
+        <StackPanel Orientation="Horizontal" Grid.Row="0" VerticalAlignment="Center">
+            <Label Name="lblUserInfo" FontSize="16" />
+            <Button Content="Сменить пароль" Width="150" Height="40" Margin="10,0,0,0" Click="ChangePasswordButton_Click"/>
+            <Button Content="Выйти из профиля" Width="150" Height="40" Margin="10,0,0,0" Click="ExitProfile"/>
+        </StackPanel>
+        <!-- Список доступных тестов -->
+        <ListView x:Name="lvAvailableTests" Grid.Row="1" Margin="0,10,0,10" SelectionMode="Single">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Название" DisplayMemberBinding="{Binding Name}" Width="200"/>
+                    <GridViewColumn Header="Описание" DisplayMemberBinding="{Binding Description}" Width="400"/>
+                    <GridViewColumn Header="Статус" DisplayMemberBinding="{Binding StatusName}" Width="100"/>
+                    <GridViewColumn Header="Мин. балл" DisplayMemberBinding="{Binding MinimalScore}" Width="80"/>
+                </GridView>
+            </ListView.View>
+        </ListView>
+        <!-- Кнопка для начала тестирования -->
+        <Button Content="Пройти тест" Grid.Row="2" Width="150" Height="40" HorizontalAlignment="Center" Click="TakeTest_Click"/>
     </Grid>
 </Window>

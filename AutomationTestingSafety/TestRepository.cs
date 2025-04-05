@@ -112,7 +112,7 @@ namespace AutomationTestingSafety
                             {
                                 var answer = new AnswerEntity
                                 {
-                                    Id = Convert.ToInt32(reader["ID_Варианта"]),
+                                    ID = Convert.ToInt32(reader["ID_Варианта"]),
                                     Text = reader["ТекстВарианта"].ToString(),
                                     IsCorrect = Convert.ToBoolean(reader["Правильный"]),
                                     Points = Convert.ToInt32(reader["Баллы"])
@@ -167,14 +167,14 @@ namespace AutomationTestingSafety
 
                     foreach (var answer in question.Answers)
                     {
-                        if (answer.Id > 0)
+                        if (answer.ID > 0)
                         {
                             using (SqlCommand cmdAnswer = new SqlCommand("UPDATE ВариантыОтветов SET ТекстВарианта = @text, Правильный = @correct, Баллы = @points WHERE ID_Варианта = @id", connection))
                             {
                                 cmdAnswer.Parameters.AddWithValue("@text", answer.Text);
                                 cmdAnswer.Parameters.AddWithValue("@correct", answer.IsCorrect);
                                 cmdAnswer.Parameters.AddWithValue("@points", answer.Points);
-                                cmdAnswer.Parameters.AddWithValue("@id", answer.Id);
+                                cmdAnswer.Parameters.AddWithValue("@id", answer.ID);
                                 cmdAnswer.ExecuteNonQuery();
                             }
                         }
