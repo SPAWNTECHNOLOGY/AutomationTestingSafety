@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 
 namespace AutomationTestingSafety.Entities
 {
-    // Класс для хранения информации о пользователе
     public class UserInfo
     {
         public int UserID { get; set; }

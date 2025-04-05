@@ -250,13 +250,18 @@
     <Compile Include="EmployeeWindow.xaml.cs">
       <DependentUpon>EmployeeWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Entities\AnswerEntity.cs" />
+    <Compile Include="Entities\QuestionEntity.cs" />
+    <Compile Include="Entities\TestEntity.cs" />
+    <Compile Include="Entities\TestResult.cs" />
+    <Compile Include="Entities\TestStatus.cs" />
     <Compile Include="SetUserPasswordWindow.xaml.cs">
       <DependentUpon>SetUserPasswordWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="SpecialistWindow.xaml.cs">
       <DependentUpon>SpecialistWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="TestRepository.cs" />
+    <Compile Include="Database\TestRepository.cs" />
     <Compile Include="TreeView.xaml.cs">
       <DependentUpon>TreeView.xaml</DependentUpon>
     </Compile>
