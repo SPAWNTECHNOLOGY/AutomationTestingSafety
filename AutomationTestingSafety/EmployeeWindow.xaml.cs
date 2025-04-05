@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Linq;
+using System.Windows;
 using AutomationTestingSafety.Entities;
 
 namespace AutomationTestingSafety
@@ -17,9 +18,12 @@ namespace AutomationTestingSafety
 
         private void LoadAvailableTests()
         {
-            var tests = TestRepository.GetAllTests();
+            var tests = TestRepository.GetAllTests()
+                                      .Where(t => t.StatusId == 2)
+                                      .ToList();
             lvAvailableTests.ItemsSource = tests;
         }
+
 
         private void TakeTest_Click(object sender, RoutedEventArgs e)
         {
