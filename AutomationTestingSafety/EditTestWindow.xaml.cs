@@ -2,7 +2,8 @@
 using System.Windows.Controls;
 using AutomationTestingSafety.Entities;
 using AutomationTestingSafety;
-using Microsoft.VisualBasic; // для использования Interaction.InputBox
+using Microsoft.VisualBasic;
+using System.Collections.Generic; // для использования Interaction.InputBox
 
 namespace AutomationTestingSafety
 {
@@ -15,13 +16,17 @@ namespace AutomationTestingSafety
         {
             InitializeComponent();
             Test = test;
+            DataContext = Test;  
+
             txtTestName.Text = Test.Name;
             txtTestDesc.Text = Test.Description;
             txtMinScore.Text = Test.MinimalScore.ToString();
             lvQuestions.ItemsSource = Test.Questions;
+            cbStatus.ItemsSource = TestRepository.GetTestStatuses(); 
             UpdateTestStructureTree();
             groupBoxTestStructure.Header = $"Структура теста (Минимальный балл: {Test.MinimalScore})";
         }
+
 
         private void UpdateTestStructureTree()
         {
@@ -151,12 +156,16 @@ namespace AutomationTestingSafety
             Test.Description = txtTestDesc.Text;
             if (int.TryParse(txtMinScore.Text, out int minScore))
                 Test.MinimalScore = minScore;
-            // Сохраняем изменения в БД (метод UpdateTest должен обновлять тест, вопросы и варианты ответов)
+            // Статус обновляется через привязку в ComboBox (Test.StatusId)
+
             TestRepository.UpdateTest(Test);
+            groupBoxTestStructure.Header = $"Структура теста (Минимальный балл: {Test.MinimalScore})";
             MessageBox.Show("Изменения сохранены.", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
             DialogResult = true;
             Close();
         }
+
+
 
         private void Cancel_Click(object sender, RoutedEventArgs e)
         {

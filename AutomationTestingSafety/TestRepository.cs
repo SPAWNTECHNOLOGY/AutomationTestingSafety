@@ -15,7 +15,7 @@ namespace AutomationTestingSafety
             using (SqlConnection connection = new SqlConnection(ConnectionString._connectionString))
             {
                 connection.Open();
-                using (SqlCommand cmd = new SqlCommand("SELECT ID_Теста, НазваниеТеста, Описание, Активен, МинимальныйБалл FROM Тесты", connection))
+                using (SqlCommand cmd = new SqlCommand("SELECT ID_Теста, НазваниеТеста, Описание, ID_СтатусаТеста, МинимальныйБалл FROM Тесты", connection))
                 using (SqlDataReader reader = cmd.ExecuteReader())
                 {
                     while (reader.Read())
@@ -25,7 +25,7 @@ namespace AutomationTestingSafety
                             Id = Convert.ToInt32(reader["ID_Теста"]),
                             Name = reader["НазваниеТеста"].ToString(),
                             Description = reader["Описание"].ToString(),
-                            Active = Convert.ToBoolean(reader["Активен"]),
+                            StatusId = Convert.ToInt32(reader["ID_СтатусаТеста"]),
                             MinimalScore = Convert.ToInt32(reader["МинимальныйБалл"])
                         });
                     }
@@ -34,22 +34,27 @@ namespace AutomationTestingSafety
             return tests;
         }
 
+
         public static int CreateTest(TestEntity test)
         {
             int newTestId = 0;
             using (SqlConnection connection = new SqlConnection(ConnectionString._connectionString))
             {
                 connection.Open();
-                using (SqlCommand cmd = new SqlCommand("INSERT INTO Тесты (НазваниеТеста, Описание, Активен) OUTPUT INSERTED.ID_Теста VALUES (@name, @desc, @active)", connection))
+                using (SqlCommand cmd = new SqlCommand(
+                    "INSERT INTO Тесты (НазваниеТеста, Описание, ID_СтатусаТеста) OUTPUT INSERTED.ID_Теста VALUES (@name, @desc, @statusId)",
+                    connection))
                 {
                     cmd.Parameters.AddWithValue("@name", test.Name);
                     cmd.Parameters.AddWithValue("@desc", test.Description);
-                    cmd.Parameters.AddWithValue("@active", test.Active);
+                    cmd.Parameters.AddWithValue("@statusId", test.StatusId);
                     newTestId = (int)cmd.ExecuteScalar();
                 }
             }
             return newTestId;
         }
+
+
 
         public static TestEntity GetTestById(int testId)
         {
@@ -58,8 +63,7 @@ namespace AutomationTestingSafety
             {
                 connection.Open();
 
-                // Получаем информацию о тесте
-                using (SqlCommand cmdTest = new SqlCommand("SELECT ID_Теста, НазваниеТеста, Описание, Активен, МинимальныйБалл  FROM Тесты WHERE ID_Теста = @id", connection))
+                using (SqlCommand cmdTest = new SqlCommand("SELECT ID_Теста, НазваниеТеста, Описание, ID_СтатусаТеста, МинимальныйБалл FROM Тесты WHERE ID_Теста = @id", connection))
                 {
                     cmdTest.Parameters.AddWithValue("@id", testId);
                     using (SqlDataReader reader = cmdTest.ExecuteReader())
@@ -71,7 +75,7 @@ namespace AutomationTestingSafety
                                 Id = Convert.ToInt32(reader["ID_Теста"]),
                                 Name = reader["НазваниеТеста"].ToString(),
                                 Description = reader["Описание"].ToString(),
-                                Active = Convert.ToBoolean(reader["Активен"]),
+                                StatusId = Convert.ToInt32(reader["ID_СтатусаТеста"]),
                                 MinimalScore = Convert.ToInt32(reader["МинимальныйБалл"])
                             };
                         }
@@ -80,7 +84,7 @@ namespace AutomationTestingSafety
                 if (test == null)
                     return null;
 
-                // Получаем вопросы теста
+                // Загрузка вопросов и вариантов ответов остается без изменений...
                 using (SqlCommand cmdQuestions = new SqlCommand("SELECT ID_Вопроса, ТекстВопроса FROM Вопросы WHERE ID_Теста = @testId", connection))
                 {
                     cmdQuestions.Parameters.AddWithValue("@testId", testId);
@@ -97,8 +101,6 @@ namespace AutomationTestingSafety
                         }
                     }
                 }
-
-                // Получаем варианты ответов для каждого вопроса
                 foreach (var question in test.Questions)
                 {
                     using (SqlCommand cmdAnswers = new SqlCommand("SELECT ID_Варианта, ТекстВарианта, Правильный, Баллы FROM ВариантыОтветов WHERE ID_Вопроса = @questionId", connection))
@@ -113,14 +115,13 @@ namespace AutomationTestingSafety
                                     Id = Convert.ToInt32(reader["ID_Варианта"]),
                                     Text = reader["ТекстВарианта"].ToString(),
                                     IsCorrect = Convert.ToBoolean(reader["Правильный"]),
-                                    Points = Convert.ToInt32(reader["Баллы"])  // Добавлено для загрузки баллов
+                                    Points = Convert.ToInt32(reader["Баллы"])
                                 };
                                 question.Answers.Add(answer);
                             }
                         }
                     }
                 }
-
             }
             return test;
         }
@@ -130,18 +131,19 @@ namespace AutomationTestingSafety
             using (SqlConnection connection = new SqlConnection(ConnectionString._connectionString))
             {
                 connection.Open();
-                // Обновляем данные теста, включая минимальный балл
-                using (SqlCommand cmdTest = new SqlCommand("UPDATE Тесты SET НазваниеТеста = @name, Описание = @desc, Активен = @active, МинимальныйБалл = @minScore WHERE ID_Теста = @id", connection))
+                using (SqlCommand cmdTest = new SqlCommand(
+                    "UPDATE Тесты SET НазваниеТеста = @name, Описание = @desc, ID_СтатусаТеста = @statusId, МинимальныйБалл = @minScore WHERE ID_Теста = @id",
+                    connection))
                 {
                     cmdTest.Parameters.AddWithValue("@name", test.Name);
                     cmdTest.Parameters.AddWithValue("@desc", test.Description);
-                    cmdTest.Parameters.AddWithValue("@active", test.Active);
+                    cmdTest.Parameters.AddWithValue("@statusId", test.StatusId);
                     cmdTest.Parameters.AddWithValue("@minScore", test.MinimalScore);
                     cmdTest.Parameters.AddWithValue("@id", test.Id);
                     cmdTest.ExecuteNonQuery();
                 }
 
-                // Обновляем вопросы и ответы
+                // Обновление вопросов и вариантов ответов остаётся без изменений
                 foreach (var question in test.Questions)
                 {
                     if (question.Id > 0)
@@ -163,7 +165,6 @@ namespace AutomationTestingSafety
                         }
                     }
 
-                    // Обновляем варианты ответов
                     foreach (var answer in question.Answers)
                     {
                         if (answer.Id > 0)
@@ -192,6 +193,7 @@ namespace AutomationTestingSafety
                 }
             }
         }
+
 
         public static void DeleteTest(int testId)
         {
@@ -247,6 +249,29 @@ namespace AutomationTestingSafety
                     cmd.ExecuteNonQuery();
                 }
             }
+        }
+        public static List<TestStatus> GetTestStatuses()
+        {
+            var statuses = new List<TestStatus>();
+            using (SqlConnection connection = new SqlConnection(ConnectionString._connectionString))
+            {
+                connection.Open();
+                using (SqlCommand cmd = new SqlCommand("SELECT ID_СтатусаТеста, СтатусТеста FROM СтатусыТестов", connection))
+                {
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            statuses.Add(new TestStatus
+                            {
+                                ID = Convert.ToInt32(reader["ID_СтатусаТеста"]),
+                                Name = reader["СтатусТеста"].ToString()
+                            });
+                        }
+                    }
+                }
+            }
+            return statuses;
         }
 
     }

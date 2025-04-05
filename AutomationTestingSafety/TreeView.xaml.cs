@@ -24,15 +24,25 @@ namespace AutomationTestingSafety
             InitializeComponent();
         }
     }
+
+    public class TestStatus
+    {
+        public int ID { get; set; }
+        public string Name { get; set; }
+    }
+
     public class TestEntity
     {
         public int Id { get; set; }
-        public string Name { get; set; }           // Название теста
-        public string Description { get; set; }      // Описание теста
-        public bool Active { get; set; }             // Статус теста
-        public int MinimalScore { get; set; }        // Минимальный балл для прохождения теста
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public int MinimalScore { get; set; }
+        public int StatusId { get; set; }  // Используется для хранения выбранного статуса теста
+        public string StatusName { get; set; } // Опционально для отображения текстового значения статуса
         public List<QuestionEntity> Questions { get; set; } = new List<QuestionEntity>();
     }
+
+
 
     public class QuestionEntity
     {

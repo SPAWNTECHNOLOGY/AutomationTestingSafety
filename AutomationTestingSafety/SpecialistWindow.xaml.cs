@@ -29,7 +29,7 @@ namespace AutomationTestingSafety
             {
                 Name = "Новый тест",
                 Description = "Описание теста",
-                Active = false
+                StatusId = 2
             };
 
             // Создаем тест в БД и получаем его Id (если требуется)
@@ -79,12 +79,16 @@ namespace AutomationTestingSafety
 
         private void ChangePasswordButton_Click(object sender, RoutedEventArgs e)
         {
-            // Реализация смены пароля
+            ChangePasswordWindow changePasswordWindow = new ChangePasswordWindow(_userInfo);
+            changePasswordWindow.Owner = this;
+            changePasswordWindow.ShowDialog();
         }
 
         private void ExitProfile(object sender, RoutedEventArgs e)
         {
-            // Реализация выхода из профиля
+            var loginWindow = new MainWindow();
+            loginWindow.Show();
+            this.Close();
         }
 
         private void DeleteTest_Click(object sender, RoutedEventArgs e)

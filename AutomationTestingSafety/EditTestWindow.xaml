@@ -15,6 +15,7 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
+
         <!-- Редактирование основных данных теста и управление вопросами -->
         <StackPanel Orientation="Vertical" Grid.Row="0" Grid.Column="0" Margin="0,0,10,10">
             <TextBlock Text="Название теста:" FontWeight="Bold"/>
@@ -24,12 +25,20 @@
             <StackPanel Orientation="Horizontal" Margin="0,5">
                 <TextBlock Text="Минимальный балл для прохождения:" VerticalAlignment="Center"/>
                 <TextBox x:Name="txtMinScore" Width="100" Margin="5,0"/>
+                <TextBlock Text="Статус теста:" VerticalAlignment="Center"/>
+                <ComboBox x:Name="cbStatus" Margin="10,0,0,0" Width="150"
+              SelectedValue="{Binding StatusId, Mode=TwoWay}"
+              SelectedValuePath="ID"
+              DisplayMemberPath="Name"/>
             </StackPanel>
+
             <StackPanel Orientation="Horizontal" Margin="0,5">
                 <Button Content="Добавить вопрос" Width="140" Margin="5" Click="AddQuestion_Click"/>
                 <Button Content="Редактировать вопрос" Width="140" Margin="5" Click="EditQuestion_Click"/>
                 <Button Content="Удалить вопрос" Width="140" Margin="5" Click="DeleteQuestion_Click"/>
             </StackPanel>
+            <StackPanel Orientation="Horizontal" Margin="0,5"/>
+
         </StackPanel>
 
         <!-- Основной раздел с управлением вопросами и вариантами -->
