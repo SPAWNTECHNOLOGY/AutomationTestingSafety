@@ -113,7 +113,7 @@ namespace AutomationTestingSafety
             // Вычисляем время прохождения
             TimeSpan timeTaken = TimeSpan.FromMinutes(15) - _timeRemaining;
             // Определяем статус прохождения теста
-            string status = totalScore >= _test.MinimalScore ? "Сдал" : "Не сдал";
+            string status = totalScore >= _test.MinimalScore ? "Сдал(а)" : "Не сдал(а)";
             string summary = $"Тест завершен.\nВремя прохождения: {timeTaken:mm\\:ss}.\n" +
                              $"Набрано баллов: {totalScore} (Мин. требуемо: {_test.MinimalScore}).\nСтатус: {status}.";
 
