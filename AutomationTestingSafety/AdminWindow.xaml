@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:AutomationTestingSafety"
         mc:Ignorable="d"
         Title="Личный кабинет администратора" Height="600" Width="800"
         Background="#FFF" FontFamily="Segoe UI">
@@ -19,22 +20,22 @@
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
-            <!-- Информация о пользователе в левом углу -->
+            <!-- Информация о пользователе -->
             <TextBlock x:Name="lblUserInfo" Grid.Row="0" FontSize="18" FontWeight="SemiBold" Foreground="#333" 
-                 Margin="0,0,0,10" TextWrapping="Wrap" HorizontalAlignment="Left"/>
+                       Margin="0,0,0,10" TextWrapping="Wrap" HorizontalAlignment="Left"/>
 
-            <!-- Верхняя панель с кнопками, кнопки поменяны местами -->
+            <!-- Верхняя панель с кнопками -->
             <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,0,10">
                 <Button Content="Сменить пароль" Width="140" Height="40" Margin="5"
-                Background="#007ACC" Foreground="White" BorderThickness="0" Click="ChangePasswordButton_Click"/>
+                        Background="#007ACC" Foreground="White" BorderThickness="0" Click="ChangePasswordButton_Click"/>
                 <Button Content="Выйти" Width="120" Height="40" Margin="5"
-                Background="#007ACC" Foreground="White" BorderThickness="0" Click="ExitProfile"/>
+                        Background="#007ACC" Foreground="White" BorderThickness="0" Click="ExitProfile"/>
             </StackPanel>
 
-            <!-- DataGrid для списка пользователей (без колонки пароля) -->
+            <!-- DataGrid для списка пользователей -->
             <DataGrid x:Name="UsersDataGrid" Grid.Row="2" AutoGenerateColumns="False" CanUserAddRows="False" 
-                CanUserDeleteRows="False" IsReadOnly="False" RowBackground="White" AlternatingRowBackground="#F9F9F9"
-                RowEditEnding="UsersDataGrid_RowEditEnding">
+                      CanUserDeleteRows="False" IsReadOnly="False" RowBackground="White" AlternatingRowBackground="#F9F9F9"
+                      RowEditEnding="UsersDataGrid_RowEditEnding">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="ID" Binding="{Binding ID_Пользователя}" IsReadOnly="True" Width="50"/>
                     <DataGridTextColumn Header="ФИО" Binding="{Binding ФИО}" Width="150"/>
@@ -49,6 +50,8 @@
                 <Button Content="Добавить" Width="120" Height="40" Margin="5" Click="AddUserButton_Click"/>
                 <Button Content="Удалить" Width="120" Height="40" Margin="5" Click="DeleteUserButton_Click"/>
                 <Button Content="Установить пароль" Width="180" Height="40" Margin="5" Click="SetPasswordButton_Click"/>
+                <!-- Новая кнопка для просмотра результатов тестов сотрудника -->
+                <Button Content="Посмотреть результаты тестов" Width="220" Height="40" Margin="5" Click="ViewTestResults_Click"/>
             </StackPanel>
         </Grid>
     </Border>

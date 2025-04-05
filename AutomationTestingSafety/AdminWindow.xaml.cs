@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Windows;
@@ -189,6 +190,25 @@ namespace AutomationTestingSafety
             else
             {
                 MessageBox.Show("Выберите пользователя для установки пароля.", "Информация", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+        }
+
+        private void ViewTestResults_Click(object sender, RoutedEventArgs e)
+        {
+            if (UsersDataGrid.SelectedItem is DataRowView row)
+            {
+                int userId = Convert.ToInt32(row["ID_Пользователя"]);
+                string userFio = Convert.ToString(row["ФИО"]);
+                // Получаем результаты тестов для данного пользователя
+                List<TestResult> results = TestRepository.GetTestResultsForUser(userId);
+                // Создаем окно результатов, передавая userId и результаты
+                var win = new AdminTestResultsWindow(userId, userFio, results);
+                win.Owner = this;
+                win.ShowDialog();
+            }
+            else
+            {
+                MessageBox.Show("Выберите пользователя для просмотра результатов тестов.", "Информация", MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
 

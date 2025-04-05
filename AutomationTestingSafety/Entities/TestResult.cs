@@ -8,6 +8,7 @@ namespace AutomationTestingSafety.Entities
 {
     public class TestResult
     {
+        public int TestResultId { get; set; }
         public int UserId { get; set; }
         public int TestId { get; set; }
         public string TimeTaken { get; set; }

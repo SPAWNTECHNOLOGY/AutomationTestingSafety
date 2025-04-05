@@ -296,5 +296,42 @@ namespace AutomationTestingSafety
             }
         }
 
+        public static List<TestResult> GetTestResultsForUser(int userId)
+        {
+            var results = new List<TestResult>();
+            using (SqlConnection connection = new SqlConnection(ConnectionString._connectionString))
+            {
+                connection.Open();
+                string query = @"
+            SELECT ID_Результата, ID_Пользователя, ID_Теста, ВремяПрохождения, НабранныеБалл, МинимальныйБалл, Статус, Детали
+            FROM РезультатыТестов
+            WHERE ID_Пользователя = @userId";
+                using (SqlCommand cmd = new SqlCommand(query, connection))
+                {
+                    cmd.Parameters.AddWithValue("@userId", userId);
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            results.Add(new TestResult
+                            {
+                                // Если у вас TestResult имеет свойства с русскими именами, адаптируйте их соответственно.
+                                // Здесь для примера используем английские имена:
+                                TestResultId = Convert.ToInt32(reader["ID_Результата"]),
+                                UserId = Convert.ToInt32(reader["ID_Пользователя"]),
+                                TestId = Convert.ToInt32(reader["ID_Теста"]),
+                                TimeTaken = reader["ВремяПрохождения"].ToString(),
+                                Score = Convert.ToInt32(reader["НабранныеБалл"]),
+                                MinimalScore = Convert.ToInt32(reader["МинимальныйБалл"]),
+                                Status = reader["Статус"].ToString(),
+                                Details = reader["Детали"].ToString()
+                            });
+                        }
+                    }
+                }
+            }
+            return results;
+        }
+
     }
 }
