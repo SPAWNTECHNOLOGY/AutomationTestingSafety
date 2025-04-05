@@ -160,6 +160,32 @@ namespace AutomationTestingSafety.Database
                     command.ExecuteNonQuery();
                 }
 
+                string createResultsTable = @"
+                IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = N'РезультатыТестов')
+                BEGIN
+                    CREATE TABLE РезультатыТестов
+                    (
+                        ID_Результата INT PRIMARY KEY IDENTITY(1,1),
+                        ID_Пользователя INT NOT NULL,
+                        ID_Теста INT NOT NULL,
+                        ВремяПрохождения NVARCHAR(50) NOT NULL,
+                        НабранныеБалл INT NOT NULL,
+                        МинимальныйБалл INT NOT NULL,
+                        Статус NVARCHAR(50) NOT NULL,
+                        Детали NVARCHAR(MAX) NULL,
+                        CONSTRAINT FK_РезультатыТестов_Пользователи FOREIGN KEY (ID_Пользователя)
+                            REFERENCES Пользователи(ID_Пользователя),
+                        CONSTRAINT FK_РезультатыТестов_Тесты FOREIGN KEY (ID_Теста)
+                            REFERENCES Тесты(ID_Теста)
+                    )
+                END";
+                using (var command = new SqlCommand(createResultsTable, connection))
+                {
+                    command.ExecuteNonQuery();
+                }
+
+
+
                 // Вставка тестов, вопросов и вариантов ответов по умолчанию (три варианта)
                 string insertDefaultTests = @"
 -- Вариант 1

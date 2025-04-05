@@ -25,6 +25,17 @@ namespace AutomationTestingSafety
         }
     }
 
+    public class TestResult
+    {
+        public int UserId { get; set; }
+        public int TestId { get; set; }
+        public string TimeTaken { get; set; } // Можно хранить в виде строки, например "12:34"
+        public int Score { get; set; }
+        public int MinimalScore { get; set; }
+        public string Status { get; set; } // "Сдал" или "Не сдал"
+        public string Details { get; set; } // JSON или текстовое описание по каждому вопросу
+    }
+
     public class TestStatus
     {
         public int ID { get; set; }

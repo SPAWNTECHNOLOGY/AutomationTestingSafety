@@ -273,6 +273,28 @@ namespace AutomationTestingSafety
             }
             return statuses;
         }
+        public static void SaveTestResult(TestResult result)
+        {
+            using (SqlConnection connection = new SqlConnection(ConnectionString._connectionString))
+            {
+                connection.Open();
+                string query = @"
+            INSERT INTO РезультатыТестов 
+            (ID_Пользователя, ID_Теста, ВремяПрохождения, НабранныеБалл, МинимальныйБалл, Статус, Детали)
+            VALUES (@userId, @testId, @timeTaken, @score, @minScore, @status, @details)";
+                using (SqlCommand cmd = new SqlCommand(query, connection))
+                {
+                    cmd.Parameters.AddWithValue("@userId", result.UserId);
+                    cmd.Parameters.AddWithValue("@testId", result.TestId);
+                    cmd.Parameters.AddWithValue("@timeTaken", result.TimeTaken);
+                    cmd.Parameters.AddWithValue("@score", result.Score);
+                    cmd.Parameters.AddWithValue("@minScore", result.MinimalScore);
+                    cmd.Parameters.AddWithValue("@status", result.Status);
+                    cmd.Parameters.AddWithValue("@details", result.Details);
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
 
     }
 }

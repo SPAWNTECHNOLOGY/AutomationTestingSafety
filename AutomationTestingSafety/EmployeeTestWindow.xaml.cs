@@ -112,16 +112,35 @@ namespace AutomationTestingSafety
 
             // Вычисляем время прохождения
             TimeSpan timeTaken = TimeSpan.FromMinutes(15) - _timeRemaining;
-            // Определяем статус прохождения
+            // Определяем статус прохождения теста
             string status = totalScore >= _test.MinimalScore ? "Сдал" : "Не сдал";
             string summary = $"Тест завершен.\nВремя прохождения: {timeTaken:mm\\:ss}.\n" +
                              $"Набрано баллов: {totalScore} (Мин. требуемо: {_test.MinimalScore}).\nСтатус: {status}.";
 
+            // Создаем объект результата для сохранения в БД
+            var testResult = new TestResult
+            {
+                // Здесь замените 1 на реальное значение идентификатора пользователя, например, _userInfo.ID
+                UserId = 1,
+                TestId = _test.Id,
+                TimeTaken = timeTaken.ToString(@"mm\:ss"),
+                Score = totalScore,
+                MinimalScore = _test.MinimalScore,
+                Status = status,
+                Details = string.Join("\n-----------------\n", results.Select(r =>
+                    $"Вопрос: {r.QuestionText}\nВаш ответ: {r.YourAnswer}\nПравильный: {r.CorrectAnswer}\nРезультат: {r.IsCorrectText}"))
+            };
+
+            // Сохраняем результат в БД
+            TestRepository.SaveTestResult(testResult);
+
+            // Показываем окно с результатами теста
             EmployeeTestResultWindow resultWindow = new EmployeeTestResultWindow(summary, results);
             resultWindow.Owner = this;
             resultWindow.ShowDialog();
             Close();
         }
+
     }
 
     public class ResultItem
