@@ -14,6 +14,7 @@ namespace AutomationTestingSafety
         private readonly DispatcherTimer _timer;
         private TimeSpan _timeRemaining;
         private int _userId; // ID пользователя, проходящего тест
+
         public EmployeeTestWindow(TestEntity test, int userId)
         {
             InitializeComponent();
@@ -50,8 +51,14 @@ namespace AutomationTestingSafety
 
             var question = _test.Questions[_currentQuestionIndex];
             tbQuestion.Text = question.Text;
-            // Привязываем список ответов напрямую (свойство IsSelected присутствует в AnswerEntity)
             lbAnswers.ItemsSource = question.Answers;
+
+            // Обновляем счётчик вопросов
+            tbQuestionCounter.Text = $"Вопрос {_currentQuestionIndex + 1} из {_test.Questions.Count}";
+
+            // Если текущий вопрос последний, скрываем кнопку "Следующий"
+            btnNext.Visibility = (_currentQuestionIndex == _test.Questions.Count - 1)
+                ? Visibility.Collapsed : Visibility.Visible;
         }
 
         private void PrevButton_Click(object sender, RoutedEventArgs e)
@@ -70,9 +77,9 @@ namespace AutomationTestingSafety
                 _currentQuestionIndex++;
                 LoadCurrentQuestion();
             }
+            // Если последнего вопроса нет, можно вызвать завершение теста
             else
             {
-                // Если последний вопрос, можно сразу завершить тест
                 FinishTest();
             }
         }
@@ -86,35 +93,41 @@ namespace AutomationTestingSafety
         private void FinishTest()
         {
             int totalScore = 0;
+            int correctCount = 0;
             var results = new List<ResultItem>();
 
             foreach (var question in _test.Questions)
             {
-                var correct = question.Answers.FirstOrDefault(a => a.IsCorrect);
                 var userAnswer = question.Answers.FirstOrDefault(a => a.IsSelected);
-                string correctText = correct != null ? correct.Text : "Нет";
-                string userText = userAnswer != null ? userAnswer.Text : "Не выбран";
-                string resultText = (userAnswer != null && userAnswer.IsCorrect) ? "Правильно" : "Неправильно";
-                if (userAnswer != null && userAnswer.IsCorrect)
+                var correct = question.Answers.FirstOrDefault(a => a.IsCorrect);
+
+                bool isAnswerCorrect = (userAnswer != null && userAnswer.IsCorrect);
+                if (isAnswerCorrect)
+                {
                     totalScore += userAnswer.Points;
+                    correctCount++;
+                }
 
                 results.Add(new ResultItem
                 {
                     QuestionText = question.Text,
-                    YourAnswer = userText,
-                    CorrectAnswer = correctText,
-                    IsCorrectText = resultText
+                    YourAnswer = userAnswer != null ? userAnswer.Text : "Не выбран",
+                    CorrectAnswer = correct != null ? correct.Text : "Нет",
+                    IsCorrect = isAnswerCorrect,
+                    IsCorrectText = isAnswerCorrect ? "Правильно" : "Неправильно"
                 });
             }
 
+            int totalQuestions = _test.Questions.Count;
             TimeSpan timeTaken = TimeSpan.FromMinutes(15) - _timeRemaining;
             string status = totalScore >= _test.MinimalScore ? "Сдал(а)" : "Не сдал(а)";
             string summary = $"Тест завершен.\nВремя прохождения: {timeTaken:mm\\:ss}.\n" +
-                             $"Набрано баллов: {totalScore} (Мин. требуемо: {_test.MinimalScore}).\nСтатус: {status}.";
+                             $"Набрано баллов: {totalScore} (Мин. требуемо: {_test.MinimalScore}).\n" +
+                             $"Правильных ответов: {correctCount} из {totalQuestions}.\nСтатус: {status}.";
 
             var testResult = new TestResult
             {
-                UserId = _userId,  // Теперь подставляется корректный userId
+                UserId = _userId,
                 TestId = _test.Id,
                 TimeTaken = timeTaken.ToString(@"mm\:ss"),
                 Score = totalScore,
@@ -126,7 +139,9 @@ namespace AutomationTestingSafety
 
             TestRepository.SaveTestResult(testResult);
 
-            EmployeeTestResultWindow resultWindow = new EmployeeTestResultWindow(summary, results);
+            EmployeeTestResultWindow resultWindow = new EmployeeTestResultWindow(
+                $"Тест завершен.\nВремя: {timeTaken:mm\\:ss}\nБаллы: {totalScore} из {_test.MinimalScore}\nПравильных ответов: {correctCount} из {totalQuestions}\nСтатус: {status}",
+                results);
             resultWindow.Owner = this;
             resultWindow.ShowDialog();
             Close();
@@ -139,5 +154,6 @@ namespace AutomationTestingSafety
         public string YourAnswer { get; set; }
         public string CorrectAnswer { get; set; }
         public string IsCorrectText { get; set; }
+        public bool IsCorrect { get; set; }
     }
 }
