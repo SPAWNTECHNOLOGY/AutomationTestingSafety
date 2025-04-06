@@ -256,6 +256,7 @@
     <Compile Include="AdminTestResultsWindow.xaml.cs">
       <DependentUpon>AdminTestResultsWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="BooleanToAnswerConverter.cs" />
     <Compile Include="ChangePasswordWindow.xaml.cs">
       <DependentUpon>ChangePasswordWindow.xaml</DependentUpon>
     </Compile>

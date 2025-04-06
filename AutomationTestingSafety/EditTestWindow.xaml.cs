@@ -92,6 +92,7 @@ namespace AutomationTestingSafety
         {
             if (lvAnswers.SelectedItem is AnswerEntity selectedAnswer && _selectedQuestion != null)
             {
+                TestRepository.DeleteAnswer(selectedAnswer.ID);
                 _selectedQuestion.Answers.Remove(selectedAnswer);
                 lvAnswers.Items.Refresh();
                 UpdateTestStructureTree();

@@ -2,11 +2,14 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local="clr-namespace:AutomationTestingSafety.Entities"
+        xmlns:convertor="clr-namespace:AutomationTestingSafety"
         Title="Редактирование теста" Height="600" Width="1000"
         WindowStartupLocation="CenterScreen" WindowState="Maximized"
         Background="#FFF" FontFamily="Segoe UI">
 
     <Window.Resources>
+        <!-- Конвертер для отображения булевого значения -->
+        <convertor:BooleanToAnswerConverter x:Key="BoolToAnswerConverter"/>
         <!-- Основной цвет #4d7dc6 -->
         <SolidColorBrush x:Key="PrimaryColor" Color="#4d7dc6"/>
         <SolidColorBrush x:Key="PrimaryColorDark" Color="#3a6cb5"/>
@@ -188,7 +191,7 @@
                                 <StackPanel Orientation="Horizontal">
                                     <TextBlock Text="{Binding Text}" />
                                     <TextBlock Text=" (" />
-                                    <TextBlock Text="{Binding IsCorrect}" />
+                                    <TextBlock Text="{Binding IsCorrect, Converter={StaticResource BoolToAnswerConverter}}"/>
                                     <TextBlock Text=", Баллы: " />
                                     <TextBlock Text="{Binding Points}" />
                                     <TextBlock Text=")"/>

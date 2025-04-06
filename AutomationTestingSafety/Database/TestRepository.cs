@@ -347,6 +347,18 @@ namespace AutomationTestingSafety
             }
             return results;
         }
+        public static void DeleteAnswer(int answerId)
+        {
+            using (SqlConnection connection = new SqlConnection(ConnectionString._connectionString))
+            {
+                connection.Open();
+                using (SqlCommand cmd = new SqlCommand("DELETE FROM ВариантыОтветов WHERE ID_Варианта = @id", connection))
+                {
+                    cmd.Parameters.AddWithValue("@id", answerId);
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
 
     }
 }
