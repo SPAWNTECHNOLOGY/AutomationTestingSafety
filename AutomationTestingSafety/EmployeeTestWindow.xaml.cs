@@ -13,11 +13,11 @@ namespace AutomationTestingSafety
         private int _currentQuestionIndex = 0;
         private readonly DispatcherTimer _timer;
         private TimeSpan _timeRemaining;
-
-        public EmployeeTestWindow(TestEntity test)
+        private int _userId; // ID пользователя, проходящего тест
+        public EmployeeTestWindow(TestEntity test, int userId)
         {
             InitializeComponent();
-            // Перезагружаем тест из БД, чтобы гарантированно получить заполненные вопросы и варианты ответов
+            _userId = userId;
             _test = TestRepository.GetTestById(test.Id);
             if (_test == null || _test.Questions.Count == 0)
             {
@@ -25,12 +25,10 @@ namespace AutomationTestingSafety
                 Close();
                 return;
             }
-            // Таймер на 15 минут
             _timeRemaining = TimeSpan.FromMinutes(15);
             _timer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(1) };
             _timer.Tick += Timer_Tick;
             _timer.Start();
-
             LoadCurrentQuestion();
         }
 
@@ -90,7 +88,6 @@ namespace AutomationTestingSafety
             int totalScore = 0;
             var results = new List<ResultItem>();
 
-            // Собираем результаты для каждого вопроса
             foreach (var question in _test.Questions)
             {
                 var correct = question.Answers.FirstOrDefault(a => a.IsCorrect);
@@ -110,37 +107,30 @@ namespace AutomationTestingSafety
                 });
             }
 
-            // Вычисляем время прохождения
             TimeSpan timeTaken = TimeSpan.FromMinutes(15) - _timeRemaining;
-            // Определяем статус прохождения теста
             string status = totalScore >= _test.MinimalScore ? "Сдал(а)" : "Не сдал(а)";
             string summary = $"Тест завершен.\nВремя прохождения: {timeTaken:mm\\:ss}.\n" +
                              $"Набрано баллов: {totalScore} (Мин. требуемо: {_test.MinimalScore}).\nСтатус: {status}.";
 
-            // Создаем объект результата для сохранения в БД
             var testResult = new TestResult
             {
-                // Здесь замените 1 на реальное значение идентификатора пользователя, например, _userInfo.ID
-                UserId = 1,
+                UserId = _userId,  // Теперь подставляется корректный userId
                 TestId = _test.Id,
                 TimeTaken = timeTaken.ToString(@"mm\:ss"),
                 Score = totalScore,
                 MinimalScore = _test.MinimalScore,
                 Status = status,
                 Details = string.Join("\n-----------------\n", results.Select(r =>
-                    $"Вопрос: {r.QuestionText}\nВаш ответ: {r.YourAnswer}\nПравильный: {r.CorrectAnswer}\nРезультат: {r.IsCorrectText}"))
+                    $"Вопрос: {r.QuestionText}\nОтвет: {r.YourAnswer}\nПравильный: {r.CorrectAnswer}\nРезультат: {r.IsCorrectText}"))
             };
 
-            // Сохраняем результат в БД
             TestRepository.SaveTestResult(testResult);
 
-            // Показываем окно с результатами теста
             EmployeeTestResultWindow resultWindow = new EmployeeTestResultWindow(summary, results);
             resultWindow.Owner = this;
             resultWindow.ShowDialog();
             Close();
         }
-
     }
 
     public class ResultItem

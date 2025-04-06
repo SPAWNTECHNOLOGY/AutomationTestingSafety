@@ -25,19 +25,19 @@ namespace AutomationTestingSafety
         }
 
 
+        // Пример в EmployeeWindow.xaml.cs
         private void TakeTest_Click(object sender, RoutedEventArgs e)
         {
             if (lvAvailableTests.SelectedItem is TestEntity selectedTest)
             {
-                // Получаем тест с вопросами из БД
                 var fullTest = TestRepository.GetTestById(selectedTest.Id);
                 if (fullTest == null || fullTest.Questions.Count == 0)
                 {
                     MessageBox.Show("В выбранном тесте отсутствуют вопросы.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
                 }
-
-                EmployeeTestWindow testWindow = new EmployeeTestWindow(fullTest);
+                // Здесь вместо 1 передаем реальный идентификатор пользователя (_userInfo.UserID, например)
+                EmployeeTestWindow testWindow = new EmployeeTestWindow(fullTest, _userInfo.UserID);
                 testWindow.Owner = this;
                 testWindow.ShowDialog();
             }
@@ -46,6 +46,7 @@ namespace AutomationTestingSafety
                 MessageBox.Show("Пожалуйста, выберите тест для прохождения.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }
+
 
 
         private void ExitProfile(object sender, RoutedEventArgs e)

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Windows;
+using System.Windows.Controls;
 using AutomationTestingSafety.Entities;
 
 namespace AutomationTestingSafety
@@ -75,6 +76,38 @@ namespace AutomationTestingSafety
             }
 
             doc.Close();
+        }
+
+        private void ViewDetails_Click(object sender, RoutedEventArgs e)
+        {
+            var button = sender as Button;
+            if (button != null && button.Tag != null)
+            {
+                string details = button.Tag.ToString();
+
+                // Создаем окно для отображения деталей
+                var detailsWindow = new Window
+                {
+                    Title = "Детали теста",
+                    Content = new ScrollViewer
+                    {
+                        Content = new TextBlock
+                        {
+                            Text = details,
+                            TextWrapping = TextWrapping.Wrap,
+                            Margin = new Thickness(10),
+                            FontSize = 14
+                        },
+                        VerticalScrollBarVisibility = ScrollBarVisibility.Auto
+                    },
+                    Width = 600,
+                    Height = 400,
+                    WindowStartupLocation = WindowStartupLocation.CenterOwner,
+                    Owner = this
+                };
+
+                detailsWindow.ShowDialog();
+            }
         }
     }
 }

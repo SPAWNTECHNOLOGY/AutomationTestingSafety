@@ -1,31 +1,120 @@
 ﻿<Window x:Class="AutomationTestingSafety.AdminTestResultsWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Результаты тестов сотрудника" Height="500" Width="800"
-        WindowStartupLocation="CenterScreen" Background="#F5F5F5" FontFamily="Segoe UI">
-    <Grid Margin="10">
+        Title="Результаты тестов сотрудника" 
+        Height="600" Width="900"
+        WindowStartupLocation="CenterScreen" 
+        Background="#FFF" 
+        FontFamily="Segoe UI">
+
+    <Grid Margin="15">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <!-- Информация о сотруднике -->
-        <TextBlock x:Name="tbUserInfo" FontSize="18" FontWeight="SemiBold" Margin="0,0,0,10"/>
-        <!-- DataGrid с результатами -->
-        <DataGrid x:Name="dgTestResults" Grid.Row="1" AutoGenerateColumns="False" CanUserAddRows="False" IsReadOnly="True"
-                  RowBackground="White" AlternatingRowBackground="#F9F9F9">
-            <DataGrid.Columns>
-                <DataGridTextColumn Header="Время прохождения" Binding="{Binding TimeTaken}" Width="100"/>
-                <DataGridTextColumn Header="Набрано" Binding="{Binding Score}" Width="80"/>
-                <DataGridTextColumn Header="Мин. балл" Binding="{Binding MinimalScore}" Width="80"/>
-                <DataGridTextColumn Header="Статус" Binding="{Binding Status}" Width="120"/>
-                <DataGridTextColumn Header="Детали" Binding="{Binding Details}" Width="*"/>
-            </DataGrid.Columns>
 
+        <!-- Заголовок -->
+        <Border Grid.Row="0" Background="#2A5C82" CornerRadius="4" Padding="10" Margin="0,0,0,15">
+            <TextBlock x:Name="tbUserInfo" 
+                       FontSize="16" 
+                       FontWeight="Medium"
+                       Foreground="White"/>
+        </Border>
+
+        <!-- Таблица результатов -->
+        <DataGrid x:Name="dgTestResults" 
+                  Grid.Row="1" 
+                  AutoGenerateColumns="False" 
+                  CanUserAddRows="False" 
+                  IsReadOnly="True"
+                  HeadersVisibility="Column"
+                  BorderThickness="0"
+                  Background="Transparent"
+                  RowBackground="#FFF"
+                  AlternatingRowBackground="#F8FAFC"
+                  ColumnHeaderHeight="40"
+                  RowHeight="35"
+                  FontSize="14"
+                  VerticalGridLinesBrush="#E5E7EB"
+                  HorizontalGridLinesBrush="#E5E7EB">
+
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Время прохождения" 
+                                   Binding="{Binding TimeTaken}" 
+                                   Width="1.5*"/>
+                <DataGridTextColumn Header="Набрано баллов" 
+                                   Binding="{Binding Score}" 
+                                   Width="*"/>
+                <DataGridTextColumn Header="Мин. балл" 
+                                   Binding="{Binding MinimalScore}" 
+                                   Width="*"/>
+                <DataGridTextColumn Header="Статус" 
+                                   Binding="{Binding Status}" 
+                                   Width="1.5*"/>
+                <DataGridTemplateColumn Header="Детали" Width="*">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Content="👁 Просмотр" 
+                                    Click="ViewDetails_Click"
+                                    Tag="{Binding Details}"
+                                    Padding="8,2"
+                                    HorizontalAlignment="Center"
+                                    Background="Transparent"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
         </DataGrid>
-        <StackPanel Grid.Row="2" HorizontalAlignment="Center" Margin="10">
-            <Button Content="Экспортировать результат" Width="180" Height="40" Click="ExportButton_Click"/>
-            <Button Content="Закрыть" Width="120" Height="40" Click="CloseButton_Click"/>
+
+        <!-- Кнопки действий -->
+        <StackPanel Grid.Row="2" 
+                    Orientation="Horizontal" 
+                    HorizontalAlignment="Right" 
+                    Margin="0,15,0,0">
+            <Button Content="Экспорт в CSV" 
+                    Width="150" 
+                    Height="36"
+                    Background="#2A5C82"
+                    Foreground="White"
+                    BorderBrush="Transparent"
+                    Click="ExportButton_Click"/>
+
+            <Button Content="Закрыть" 
+                    Width="120" 
+                    Height="36"
+                    Background="Transparent"
+                    Foreground="#2A5C82"
+                    BorderBrush="#2A5C82"
+                    Click="CloseButton_Click"/>
         </StackPanel>
     </Grid>
+
+    <!-- Стиль для кнопок -->
+    <Window.Resources>
+        <Style x:Key="ModernButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="#2A5C82"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="3">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#1E4A6E"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
 </Window>
