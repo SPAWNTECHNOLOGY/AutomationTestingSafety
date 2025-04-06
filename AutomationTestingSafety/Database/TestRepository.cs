@@ -15,7 +15,14 @@ namespace AutomationTestingSafety
             using (SqlConnection connection = new SqlConnection(ConnectionString._connectionString))
             {
                 connection.Open();
-                using (SqlCommand cmd = new SqlCommand("SELECT ID_Теста, НазваниеТеста, Описание, ID_СтатусаТеста, МинимальныйБалл FROM Тесты", connection))
+                string query = @"
+            SELECT t.ID_Теста, t.НазваниеТеста, t.Описание, t.МинимальныйБалл, 
+                   t.ID_СтатусаТеста, t.ID_Пользователя, s.СтатусТеста,
+                   u.ФИО AS CreatorName
+            FROM Тесты t
+            JOIN СтатусыТестов s ON t.ID_СтатусаТеста = s.ID_СтатусаТеста
+            LEFT JOIN Пользователи u ON t.ID_Пользователя = u.ID_Пользователя";
+                using (SqlCommand cmd = new SqlCommand(query, connection))
                 using (SqlDataReader reader = cmd.ExecuteReader())
                 {
                     while (reader.Read())
@@ -25,14 +32,19 @@ namespace AutomationTestingSafety
                             Id = Convert.ToInt32(reader["ID_Теста"]),
                             Name = reader["НазваниеТеста"].ToString(),
                             Description = reader["Описание"].ToString(),
+                            MinimalScore = Convert.ToInt32(reader["МинимальныйБалл"]),
                             StatusId = Convert.ToInt32(reader["ID_СтатусаТеста"]),
-                            MinimalScore = Convert.ToInt32(reader["МинимальныйБалл"])
+                            StatusName = reader["СтатусТеста"].ToString(),
+                            EmployeeId = Convert.ToInt32(reader["ID_Пользователя"]),
+                            CreatorName = reader["CreatorName"].ToString()
                         });
                     }
                 }
             }
             return tests;
         }
+
+
 
 
         public static int CreateTest(TestEntity test)
@@ -42,17 +54,19 @@ namespace AutomationTestingSafety
             {
                 connection.Open();
                 using (SqlCommand cmd = new SqlCommand(
-                    "INSERT INTO Тесты (НазваниеТеста, Описание, ID_СтатусаТеста) OUTPUT INSERTED.ID_Теста VALUES (@name, @desc, @statusId)",
+                    "INSERT INTO Тесты (НазваниеТеста, Описание, ID_СтатусаТеста, ID_Пользователя) OUTPUT INSERTED.ID_Теста VALUES (@name, @desc, @statusId, @employeeId)",
                     connection))
                 {
                     cmd.Parameters.AddWithValue("@name", test.Name);
                     cmd.Parameters.AddWithValue("@desc", test.Description);
                     cmd.Parameters.AddWithValue("@statusId", test.StatusId);
+                    cmd.Parameters.AddWithValue("@employeeId", test.EmployeeId);
                     newTestId = (int)cmd.ExecuteScalar();
                 }
             }
             return newTestId;
         }
+
 
 
 
@@ -132,13 +146,14 @@ namespace AutomationTestingSafety
             {
                 connection.Open();
                 using (SqlCommand cmdTest = new SqlCommand(
-                    "UPDATE Тесты SET НазваниеТеста = @name, Описание = @desc, ID_СтатусаТеста = @statusId, МинимальныйБалл = @minScore WHERE ID_Теста = @id",
+                    "UPDATE Тесты SET НазваниеТеста = @name, Описание = @desc, ID_СтатусаТеста = @statusId, МинимальныйБалл = @minScore, ID_Пользователя = @employeeId WHERE ID_Теста = @id",
                     connection))
                 {
                     cmdTest.Parameters.AddWithValue("@name", test.Name);
                     cmdTest.Parameters.AddWithValue("@desc", test.Description);
                     cmdTest.Parameters.AddWithValue("@statusId", test.StatusId);
                     cmdTest.Parameters.AddWithValue("@minScore", test.MinimalScore);
+                    cmdTest.Parameters.AddWithValue("@employeeId", test.EmployeeId);
                     cmdTest.Parameters.AddWithValue("@id", test.Id);
                     cmdTest.ExecuteNonQuery();
                 }

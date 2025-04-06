@@ -80,47 +80,71 @@ namespace AutomationTestingSafety.Database
                 InsertTestStatusIfNotExists(connection, 3, "В архиве");
 
                 // Таблица Тесты с полем МинимальныйБалл и удалением поля Активен, добавлением поля ID_СтатусаТеста
+                // Создание таблицы Тесты с добавлением поля МинимальныйБалл, ID_СтатусаТеста и нового поля ID_Пользователя
                 string createTestsTable = @"
-                    IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = N'Тесты')
-                    BEGIN
-                        CREATE TABLE Тесты
-                        (
-                            ID_Теста INT PRIMARY KEY IDENTITY(1,1),
-                            НазваниеТеста NVARCHAR(200) NOT NULL,
-                            Описание NVARCHAR(500) NULL,
-                            МинимальныйБалл INT NOT NULL DEFAULT 0,
-                            ID_СтатусаТеста INT NOT NULL DEFAULT 1
-                        )
-                    END";
+IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = N'Тесты')
+BEGIN
+    CREATE TABLE Тесты
+    (
+        ID_Теста INT PRIMARY KEY IDENTITY(1,1),
+        НазваниеТеста NVARCHAR(200) NOT NULL,
+        Описание NVARCHAR(500) NULL,
+        МинимальныйБалл INT NOT NULL DEFAULT 0,
+        ID_СтатусаТеста INT NOT NULL DEFAULT 1,
+        ID_Пользователя INT NOT NULL DEFAULT 1
+    )
+END";
                 using (var command = new SqlCommand(createTestsTable, connection))
                 {
                     command.ExecuteNonQuery();
                 }
+
+                // Если существует старое поле "Активен", удаляем его
                 string dropActiveColumn = @"
-                    IF EXISTS(SELECT * FROM sys.columns 
-                              WHERE Name = N'Активен' AND Object_ID = OBJECT_ID(N'Тесты'))
-                    BEGIN
-                        ALTER TABLE Тесты DROP COLUMN Активен
-                    END";
+IF EXISTS(SELECT * FROM sys.columns 
+          WHERE Name = N'Активен' AND Object_ID = OBJECT_ID(N'Тесты'))
+BEGIN
+    ALTER TABLE Тесты DROP COLUMN Активен
+END";
                 using (var command = new SqlCommand(dropActiveColumn, connection))
                 {
                     command.ExecuteNonQuery();
                 }
-                string addFk = @"
-                    IF NOT EXISTS (
-                        SELECT * FROM sys.foreign_keys 
-                        WHERE name = N'FK_Тесты_СтатусыТестов'
-                    )
-                    BEGIN
-                        ALTER TABLE Тесты
-                        ADD CONSTRAINT FK_Тесты_СтатусыТестов 
-                        FOREIGN KEY (ID_СтатусаТеста) 
-                        REFERENCES СтатусыТестов(ID_СтатусаТеста)
-                    END";
-                using (var command = new SqlCommand(addFk, connection))
+
+                // Добавляем внешний ключ для поля ID_СтатусаТеста
+                string addFkStatus = @"
+IF NOT EXISTS (
+    SELECT * FROM sys.foreign_keys 
+    WHERE name = N'FK_Тесты_СтатусыТестов'
+)
+BEGIN
+    ALTER TABLE Тесты
+    ADD CONSTRAINT FK_Тесты_СтатусыТестов 
+    FOREIGN KEY (ID_СтатусаТеста) 
+    REFERENCES СтатусыТестов(ID_СтатусаТеста)
+END";
+                using (var command = new SqlCommand(addFkStatus, connection))
                 {
                     command.ExecuteNonQuery();
                 }
+
+                // Добавляем внешний ключ для поля ID_Пользователя
+                string addFkEmployee = @"
+IF NOT EXISTS (
+    SELECT * FROM sys.foreign_keys 
+    WHERE name = N'FK_Тесты_Пользователи'
+)
+BEGIN
+    ALTER TABLE Тесты
+    ADD CONSTRAINT FK_Тесты_Пользователи 
+    FOREIGN KEY (ID_Пользователя) 
+    REFERENCES Пользователи(ID_Пользователя)
+END";
+                using (var command = new SqlCommand(addFkEmployee, connection))
+                {
+                    command.ExecuteNonQuery();
+                }
+
 
                 // Таблица Вопросы
                 string createQuestionsTable = @"
@@ -183,7 +207,6 @@ namespace AutomationTestingSafety.Database
                 {
                     command.ExecuteNonQuery();
                 }
-
 
 
                 // Вставка тестов, вопросов и вариантов ответов по умолчанию (три варианта)

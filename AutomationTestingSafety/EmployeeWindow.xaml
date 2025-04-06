@@ -24,6 +24,7 @@
                     <GridViewColumn Header="Описание" DisplayMemberBinding="{Binding Description}" Width="400"/>
                     <GridViewColumn Header="Статус" DisplayMemberBinding="{Binding StatusName}" Width="100"/>
                     <GridViewColumn Header="Мин. балл" DisplayMemberBinding="{Binding MinimalScore}" Width="80"/>
+                    <GridViewColumn Header="Создатель" DisplayMemberBinding="{Binding CreatorName}" Width="150"/>
                 </GridView>
             </ListView.View>
         </ListView>

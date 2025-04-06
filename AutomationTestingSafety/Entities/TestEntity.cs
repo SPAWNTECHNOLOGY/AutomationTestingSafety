@@ -14,6 +14,9 @@ namespace AutomationTestingSafety.Entities
         public int MinimalScore { get; set; }
         public int StatusId { get; set; }
         public string StatusName { get; set; }
+        public int EmployeeId { get; set; }
+        public string CreatorName { get; set; }
         public List<QuestionEntity> Questions { get; set; } = new List<QuestionEntity>();
     }
+
 }
