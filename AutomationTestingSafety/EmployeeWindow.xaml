@@ -2,8 +2,9 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local="clr-namespace:AutomationTestingSafety"
-        Title="Личный кабинет сотрудника" Height="450" Width="800"   WindowState="Maximized"
-        WindowStartupLocation="CenterScreen" Background="#FFF" FontFamily="Segoe UI">
+        Title="Личный кабинет сотрудника" Height="450" Width="800"
+        WindowStartupLocation="CenterScreen" WindowState="Maximized"
+        Background="#FFF" FontFamily="Segoe UI">
     <Window.Resources>
         <!-- Стиль для кнопок -->
         <Style TargetType="Button">
@@ -47,11 +48,18 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <!-- Верхняя панель с информацией и кнопками -->
-        <StackPanel Orientation="Horizontal" Grid.Row="0" VerticalAlignment="Center">
-            <Label Name="lblUserInfo" FontSize="16" VerticalAlignment="Center"/>
-            <Button Content="Сменить пароль" Click="ChangePasswordButton_Click"/>
-            <Button Content="Выйти из профиля" Click="ExitProfile"/>
-        </StackPanel>
+        <DockPanel Grid.Row="0" LastChildFill="False">
+            <!-- Рамка с данными пользователя -->
+            <Border Background="#4d7dc6" CornerRadius="4" Padding="10" DockPanel.Dock="Left" MaxWidth="600">
+                <TextBlock Name="lblUserInfo" FontSize="16" FontWeight="SemiBold" Foreground="White" 
+                   TextWrapping="Wrap" TextTrimming="CharacterEllipsis"/>
+            </Border>
+            <!-- Кнопки справа -->
+            <StackPanel Orientation="Horizontal" DockPanel.Dock="Right">
+                <Button Content="Сменить пароль" Click="ChangePasswordButton_Click"/>
+                <Button Content="Выйти из профиля" Click="ExitProfile"/>
+            </StackPanel>
+        </DockPanel>
         <!-- Список доступных тестов -->
         <ListView x:Name="lvAvailableTests" Grid.Row="1" Margin="0,10,0,10" SelectionMode="Single">
             <ListView.View>

@@ -8,6 +8,7 @@ namespace AutomationTestingSafety
         public string FullName { get; private set; }
         public string Login { get; private set; }
         public string Position { get; private set; }
+        public string BirthDate { get; private set; }
 
         public AddUserWindow()
         {
@@ -18,7 +19,8 @@ namespace AutomationTestingSafety
         {
             if (string.IsNullOrWhiteSpace(txtFullName.Text) ||
                 string.IsNullOrWhiteSpace(txtLogin.Text) ||
-                cbPosition.SelectedItem == null)
+                cbPosition.SelectedItem == null ||
+                dpBirthDate.SelectedDate == null)
             {
                 MessageBox.Show("Заполните все поля.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
@@ -26,8 +28,10 @@ namespace AutomationTestingSafety
             FullName = txtFullName.Text.Trim();
             Login = txtLogin.Text.Trim();
             Position = ((ComboBoxItem)cbPosition.SelectedItem).Content.ToString();
+            BirthDate = dpBirthDate.SelectedDate.Value.ToShortDateString();
             DialogResult = true;
         }
+
 
         private void CancelButton_Click(object sender, RoutedEventArgs e)
         {

@@ -12,7 +12,7 @@ namespace AutomationTestingSafety
         {
             InitializeComponent();
             _userInfo = userInfo;
-            lblUserInfo.Content = $"Добро пожаловать, {_userInfo.FullName} (Сотрудник). Дата регистрации: {_userInfo.RegistrationDate:d}";
+            lblUserInfo.Text = $"Добро пожаловать, {_userInfo.FullName} (Сотрудник). Дата регистрации: {_userInfo.RegistrationDate:d}";
             LoadAvailableTests();
         }
 

@@ -45,33 +45,38 @@ namespace AutomationTestingSafety
                 {
                     connection.Open();
                     string query = @"
-                        SELECT 
-                            u.ID_Пользователя,
-                            u.ФИО,
-                            u.Логин,
-                            u.Пароль,
-                            u.ДатаРегистрации,
-                            d.НазваниеДолжности AS Должность
-                        FROM Пользователи u
-                        INNER JOIN Должности d ON u.ID_Должности = d.ID_Должности";
+                SELECT 
+                    u.ID_Пользователя,
+                    u.ФИО,
+                    u.ДатаРождения,
+                    u.Логин,
+                    u.Пароль,
+                    u.ДатаРегистрации,
+                    d.НазваниеДолжности AS Должность
+                FROM Пользователи u
+                INNER JOIN Должности d ON u.ID_Должности = d.ID_Должности";
                     adapter = new SqlDataAdapter(query, connection);
                     usersTable = new DataTable();
                     adapter.Fill(usersTable);
 
-                    // Настройка команд для обновления, вставки и удаления
+                    // Обновленный UPDATE: добавлено обновление поля ДатаРождения
                     adapter.UpdateCommand = new SqlCommand(
-                        @"UPDATE Пользователи SET ФИО = @fio, Логин = @login, Пароль = @password 
-                          WHERE ID_Пользователя = @id", connection);
+                        @"UPDATE Пользователи 
+                  SET ФИО = @fio, ДатаРождения = @dateBirth, Логин = @login, Пароль = @password 
+                  WHERE ID_Пользователя = @id", connection);
                     adapter.UpdateCommand.Parameters.Add("@fio", SqlDbType.NVarChar, 200, "ФИО");
+                    adapter.UpdateCommand.Parameters.Add("@dateBirth", SqlDbType.NVarChar, 200, "ДатаРождения");
                     adapter.UpdateCommand.Parameters.Add("@login", SqlDbType.NVarChar, 100, "Логин");
                     adapter.UpdateCommand.Parameters.Add("@password", SqlDbType.NVarChar, 100, "Пароль");
                     adapter.UpdateCommand.Parameters.Add("@id", SqlDbType.Int, 0, "ID_Пользователя");
 
+                    // Обновленный INSERT: добавлено поле ДатаРождения
                     adapter.InsertCommand = new SqlCommand(
-                        @"INSERT INTO Пользователи (ФИО, Логин, Пароль, ID_Должности) 
-                          VALUES (@fio, @login, @password, 
-                          (SELECT TOP 1 ID_Должности FROM Должности WHERE НазваниеДолжности = @position))", connection);
+                        @"INSERT INTO Пользователи (ФИО, ДатаРождения, Логин, Пароль, ID_Должности) 
+                  VALUES (@fio, @dateBirth, @login, @password, 
+                  (SELECT TOP 1 ID_Должности FROM Должности WHERE НазваниеДолжности = @position))", connection);
                     adapter.InsertCommand.Parameters.Add("@fio", SqlDbType.NVarChar, 200, "ФИО");
+                    adapter.InsertCommand.Parameters.Add("@dateBirth", SqlDbType.NVarChar, 200, "ДатаРождения");
                     adapter.InsertCommand.Parameters.Add("@login", SqlDbType.NVarChar, 100, "Логин");
                     adapter.InsertCommand.Parameters.Add("@password", SqlDbType.NVarChar, 100, "Пароль");
                     adapter.InsertCommand.Parameters.Add("@position", SqlDbType.NVarChar, 200, "Должность");
@@ -88,6 +93,7 @@ namespace AutomationTestingSafety
                 MessageBox.Show("Ошибка загрузки пользователей: " + ex.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
+
 
         // Автоматическое сохранение изменений при завершении редактирования строки
         private void UsersDataGrid_RowEditEnding(object sender, DataGridRowEditEndingEventArgs e)
@@ -138,6 +144,7 @@ namespace AutomationTestingSafety
             {
                 DataRow newRow = usersTable.NewRow();
                 newRow["ФИО"] = addWindow.FullName;
+                newRow["ДатаРождения"] = addWindow.BirthDate;
                 newRow["Логин"] = addWindow.Login;
                 newRow["Пароль"] = ""; // пароль устанавливается отдельно
                 newRow["ДатаРегистрации"] = DateTime.Now;
