@@ -3,6 +3,34 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Добавление пользователя" Height="300" Width="400" 
         WindowStartupLocation="CenterOwner" Background="#F0F0F0">
+    <Window.Resources>
+        <!-- Современный стиль для кнопок с акцентным цветом #4d7dc6 -->
+        <Style x:Key="ModernButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="#4d7dc6"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Padding" Value="8,4"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Height" Value="40"/>
+            <Setter Property="Width" Value="80"/>
+            <Setter Property="Margin" Value="10,0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" CornerRadius="4">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#3b69a3"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
     <Border Background="White" CornerRadius="8" Padding="20" BorderBrush="#CCC" BorderThickness="1">
         <Grid>
             <Grid.RowDefinitions>
@@ -28,10 +56,9 @@
                 </ComboBox>
             </StackPanel>
             <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Center">
-                <Button Content="OK" Width="80" Height="40" Margin="10,0" Click="OkButton_Click"
-                        Background="#007ACC" Foreground="White" BorderThickness="0"/>
+                <Button Content="OK" Style="{StaticResource ModernButtonStyle}" Click="OkButton_Click"/>
                 <Button Content="Отмена" Width="80" Height="40" Margin="10,0" Click="CancelButton_Click"
-                        Background="#CCC" Foreground="Black" BorderThickness="0"/>
+                        Background="#CCC" Foreground="Black" BorderThickness="0" Cursor="Hand"/>
             </StackPanel>
         </Grid>
     </Border>

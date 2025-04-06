@@ -11,13 +11,13 @@ namespace AutomationTestingSafety
     {
         public TestEntity Test { get; set; }
         private QuestionEntity _selectedQuestion;
-
-        public EditTestWindow(TestEntity test)
+        public int _UserID { get; set; }
+        public EditTestWindow(TestEntity test, int _userID)
         {
             InitializeComponent();
             Test = test;
-            DataContext = Test;  
-
+            DataContext = Test;
+            _UserID = _userID;
             txtTestName.Text = Test.Name;
             txtTestDesc.Text = Test.Description;
             txtMinScore.Text = Test.MinimalScore.ToString();
@@ -154,6 +154,7 @@ namespace AutomationTestingSafety
         {
             Test.Name = txtTestName.Text;
             Test.Description = txtTestDesc.Text;
+            Test.EmployeeId = _UserID;
             if (int.TryParse(txtMinScore.Text, out int minScore))
                 Test.MinimalScore = minScore;
             // Статус обновляется через привязку в ComboBox (Test.StatusId)

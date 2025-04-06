@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Результаты тестов сотрудника" 
         Height="600" Width="900"
+        WindowState="Maximized"
         WindowStartupLocation="CenterScreen" 
         Background="#FFF" 
         FontFamily="Segoe UI">
@@ -15,7 +16,7 @@
         </Grid.RowDefinitions>
 
         <!-- Заголовок -->
-        <Border Grid.Row="0" Background="#2A5C82" CornerRadius="4" Padding="10" Margin="0,0,0,15">
+        <Border Grid.Row="0" Background="#4d7dc6" CornerRadius="4" Padding="10" Margin="0,0,0,15">
             <TextBlock x:Name="tbUserInfo" 
                        FontSize="16" 
                        FontWeight="Medium"
@@ -75,7 +76,7 @@
             <Button Content="Экспорт в Word" 
                      Width="150" 
                      Height="36"
-                     Background="#2A5C82"
+                     Background="#4d7dc6"
                      Foreground="White"
                      BorderBrush="Transparent"
                      Click="ExportButtonWord_Click"/>       
@@ -83,7 +84,7 @@
             <Button Content="Экспорт в PDF" 
                     Width="150" 
                     Height="36"
-                    Background="#2A5C82"
+                    Background="#4d7dc6"
                     Foreground="White"
                     BorderBrush="Transparent"
                     Click="ExportButton_Click"/>

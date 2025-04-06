@@ -29,7 +29,8 @@ namespace AutomationTestingSafety
             {
                 Name = "Новый тест",
                 Description = "Описание теста",
-                StatusId = 2
+                StatusId = 2,
+                EmployeeId = _userInfo.UserID
             };
 
             // Создаем тест в БД и получаем его Id (если требуется)
@@ -45,7 +46,7 @@ namespace AutomationTestingSafety
                 TestEntity test = TestRepository.GetTestById(selectedTest.Id);
                 if (test != null)
                 {
-                    EditTestWindow editWindow = new EditTestWindow(test);
+                    EditTestWindow editWindow = new EditTestWindow(test, _userInfo.UserID);
                     editWindow.Owner = this;
                     if (editWindow.ShowDialog() == true)
                     {

@@ -3,7 +3,102 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local="clr-namespace:AutomationTestingSafety.Entities"
         Title="Редактирование теста" Height="600" Width="1000"
-        WindowStartupLocation="CenterScreen">
+        WindowStartupLocation="CenterScreen" WindowState="Maximized"
+        Background="#FFF" FontFamily="Segoe UI">
+
+    <Window.Resources>
+        <!-- Основной цвет #4d7dc6 -->
+        <SolidColorBrush x:Key="PrimaryColor" Color="#4d7dc6"/>
+        <SolidColorBrush x:Key="PrimaryColorDark" Color="#3a6cb5"/>
+        <SolidColorBrush x:Key="PrimaryColorLight" Color="#6a9ad6"/>
+
+        <!-- Стиль для кнопок -->
+        <Style x:Key="PrimaryButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="{StaticResource PrimaryColor}"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="Padding" Value="8,4"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Height" Value="32"/>
+            <Setter Property="MinWidth" Value="120"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" CornerRadius="4">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="{StaticResource PrimaryColorDark}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Стиль для второстепенных кнопок -->
+        <Style x:Key="SecondaryButtonStyle" TargetType="Button" BasedOn="{StaticResource PrimaryButtonStyle}">
+            <Setter Property="Background" Value="#F0F0F0"/>
+            <Setter Property="Foreground" Value="#333333"/>
+            <Setter Property="BorderBrush" Value="#CCCCCC"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#E0E0E0"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- Стиль для ListView -->
+        <Style TargetType="ListView">
+            <Setter Property="BorderBrush" Value="#CCCCCC"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="Margin" Value="0,5,0,0"/>
+        </Style>
+
+        <!-- Стиль для заголовков GridView -->
+        <Style TargetType="GridViewColumnHeader">
+            <Setter Property="Background" Value="{StaticResource PrimaryColor}"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Padding" Value="8,4"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+        </Style>
+
+        <!-- Стиль для GroupBox -->
+        <Style TargetType="GroupBox">
+            <Setter Property="BorderBrush" Value="#CCCCCC"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="Padding" Value="5"/>
+            <Setter Property="Foreground" Value="#333333"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Margin" Value="5"/>
+        </Style>
+
+        <!-- Стиль для TextBox -->
+        <Style TargetType="TextBox">
+            <Setter Property="BorderBrush" Value="#CCCCCC"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="4"/>
+            <Setter Property="Background" Value="White"/>
+        </Style>
+
+        <!-- Стиль для ComboBox -->
+        <Style TargetType="ComboBox">
+            <Setter Property="BorderBrush" Value="#CCCCCC"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="4"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="Height" Value="28"/>
+        </Style>
+    </Window.Resources>
+
     <Grid Margin="10">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="3*"/>
@@ -15,30 +110,28 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-
         <!-- Редактирование основных данных теста и управление вопросами -->
         <StackPanel Orientation="Vertical" Grid.Row="0" Grid.Column="0" Margin="0,0,10,10">
-            <TextBlock Text="Название теста:" FontWeight="Bold"/>
+            <TextBlock Text="Название теста:" FontWeight="Bold" Foreground="#333333"/>
             <TextBox x:Name="txtTestName" Height="30" Margin="0,5"/>
-            <TextBlock Text="Описание:" FontWeight="Bold" Margin="0,10,0,0"/>
+            <TextBlock Text="Описание:" FontWeight="Bold" Margin="0,10,0,0" Foreground="#333333"/>
             <TextBox x:Name="txtTestDesc" Height="60" AcceptsReturn="True" TextWrapping="Wrap" Margin="0,5"/>
+
             <StackPanel Orientation="Horizontal" Margin="0,5">
-                <TextBlock Text="Минимальный балл для прохождения:" VerticalAlignment="Center"/>
+                <TextBlock Text="Минимальный балл для прохождения:" VerticalAlignment="Center" Foreground="#333333"/>
                 <TextBox x:Name="txtMinScore" Width="100" Margin="5,0"/>
-                <TextBlock Text="Статус теста:" VerticalAlignment="Center"/>
-                <ComboBox x:Name="cbStatus" Margin="10,0,0,0" Width="150"
-              SelectedValue="{Binding StatusId, Mode=TwoWay}"
-              SelectedValuePath="ID"
-              DisplayMemberPath="Name"/>
+                <TextBlock Text="Статус теста:" VerticalAlignment="Center" Margin="10,0,0,0" Foreground="#333333"/>
+                <ComboBox x:Name="cbStatus" Margin="5,0,0,0" Width="150"
+                          SelectedValue="{Binding StatusId, Mode=TwoWay}"
+                          SelectedValuePath="ID"
+                          DisplayMemberPath="Name"/>
             </StackPanel>
 
             <StackPanel Orientation="Horizontal" Margin="0,5">
-                <Button Content="Добавить вопрос" Width="140" Margin="5" Click="AddQuestion_Click"/>
-                <Button Content="Редактировать вопрос" Width="140" Margin="5" Click="EditQuestion_Click"/>
-                <Button Content="Удалить вопрос" Width="140" Margin="5" Click="DeleteQuestion_Click"/>
+                <Button Content="Добавить вопрос" Style="{StaticResource PrimaryButtonStyle}" Click="AddQuestion_Click"/>
+                <Button Content="Редактировать вопрос" Style="{StaticResource PrimaryButtonStyle}" Click="EditQuestion_Click" Width="150"/>
+                <Button Content="Удалить вопрос" Style="{StaticResource PrimaryButtonStyle}" Click="DeleteQuestion_Click"/>
             </StackPanel>
-            <StackPanel Orientation="Horizontal" Margin="0,5"/>
-
         </StackPanel>
 
         <!-- Основной раздел с управлением вопросами и вариантами -->
@@ -47,6 +140,7 @@
                 <ColumnDefinition Width="2*"/>
                 <ColumnDefinition Width="3*"/>
             </Grid.ColumnDefinitions>
+
             <!-- Список вопросов -->
             <ListView x:Name="lvQuestions" SelectionChanged="lvQuestions_SelectionChanged">
                 <ListView.View>
@@ -55,9 +149,10 @@
                     </GridView>
                 </ListView.View>
             </ListView>
+
             <!-- Список вариантов ответов для выбранного вопроса -->
             <StackPanel Grid.Column="1" Margin="10,0,0,0">
-                <TextBlock Text="Варианты ответов:" FontWeight="Bold"/>
+                <TextBlock Text="Варианты ответов:" FontWeight="Bold" Foreground="#333333"/>
                 <ListView x:Name="lvAnswers">
                     <ListView.View>
                         <GridView>
@@ -68,17 +163,17 @@
                     </ListView.View>
                 </ListView>
                 <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
-                    <Button Content="Добавить ответ" Width="140" Margin="5" Click="AddAnswer_Click"/>
-                    <Button Content="Удалить ответ" Width="140" Margin="5" Click="DeleteAnswer_Click"/>
-                    <Button Content="Редактировать ответ" Width="140" Margin="5" Click="EditAnswer_Click"/>
+                    <Button Content="Добавить ответ" Style="{StaticResource PrimaryButtonStyle}" Click="AddAnswer_Click"/>
+                    <Button Content="Удалить ответ" Style="{StaticResource PrimaryButtonStyle}" Click="DeleteAnswer_Click"/>
+                    <Button Content="Редактировать ответ" Style="{StaticResource PrimaryButtonStyle}" Click="EditAnswer_Click"/>
                 </StackPanel>
             </StackPanel>
         </Grid>
 
         <!-- Панель сохранения изменений -->
         <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.Column="0" HorizontalAlignment="Center" Margin="0,10,0,0">
-            <Button Content="Сохранить" Width="120" Margin="10" Click="SaveTest_Click"/>
-            <Button Content="Отмена" Width="120" Margin="10" Click="Cancel_Click"/>
+            <Button Content="Сохранить" Style="{StaticResource PrimaryButtonStyle}" Click="SaveTest_Click"/>
+            <Button Content="Отмена" Style="{StaticResource SecondaryButtonStyle}" Click="Cancel_Click"/>
         </StackPanel>
 
         <!-- Дерево структуры теста с отображением минимального балла -->

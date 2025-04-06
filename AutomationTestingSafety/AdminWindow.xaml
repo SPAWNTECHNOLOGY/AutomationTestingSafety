@@ -6,8 +6,54 @@
         xmlns:local="clr-namespace:AutomationTestingSafety"
         mc:Ignorable="d"
         Title="Личный кабинет администратора" Height="600" Width="800"
+        WindowState="Maximized"
         Background="#FFF" FontFamily="Segoe UI">
-    <Border Background="White" BorderBrush="#DDD" BorderThickness="1" CornerRadius="5" Padding="20">
+    <Window.Resources>
+        <!-- Стиль для кнопок -->
+        <Style x:Key="ModernButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="#4d7dc6"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Margin" Value="8"/>
+            <Setter Property="Padding" Value="10,5"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Height" Value="40"/>
+            <Setter Property="Width" Value="150"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" CornerRadius="4" SnapsToDevicePixels="True">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#1E4A6E"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <!-- Стиль для заголовков DataGrid -->
+        <Style TargetType="DataGridColumnHeader">
+            <Setter Property="Background" Value="#4d7dc6"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="Padding" Value="6"/>
+        </Style>
+        <!-- Стиль для текстового заголовка -->
+        <Style x:Key="HeaderTextStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="18"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+            <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+        </Style>
+    </Window.Resources>
+    <Border Background="White" BorderBrush="#DDD" BorderThickness="1" CornerRadius="5" Padding="20" Margin="20">
         <Grid>
             <Grid.RowDefinitions>
                 <!-- Информация о пользователе -->
@@ -21,21 +67,20 @@
             </Grid.RowDefinitions>
 
             <!-- Информация о пользователе -->
-            <TextBlock x:Name="lblUserInfo" Grid.Row="0" FontSize="18" FontWeight="SemiBold" Foreground="#333" 
-                       Margin="0,0,0,10" TextWrapping="Wrap" HorizontalAlignment="Left"/>
+            <Border Background="#4d7dc6" CornerRadius="4" Padding="10" Margin="0,0,0,10" HorizontalAlignment="Left" MaxWidth="900">
+                <TextBlock x:Name="lblUserInfo" Style="{StaticResource HeaderTextStyle}"/>
+            </Border>
 
             <!-- Верхняя панель с кнопками -->
             <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,0,10">
-                <Button Content="Сменить пароль" Width="140" Height="40" Margin="5"
-                        Background="#007ACC" Foreground="White" BorderThickness="0" Click="ChangePasswordButton_Click"/>
-                <Button Content="Выйти" Width="120" Height="40" Margin="5"
-                        Background="#007ACC" Foreground="White" BorderThickness="0" Click="ExitProfile"/>
+                <Button Content="Сменить пароль" Style="{StaticResource ModernButtonStyle}" Width="140" Click="ChangePasswordButton_Click"/>
+                <Button Content="Выйти" Style="{StaticResource ModernButtonStyle}" Width="120" Click="ExitProfile"/>
             </StackPanel>
 
-            <!-- DataGrid для списка пользователей -->
+            <!-- DataGrid для списка пользователей (без колонки ID) -->
             <DataGrid x:Name="UsersDataGrid" Grid.Row="2" AutoGenerateColumns="False" CanUserAddRows="False" 
-                      CanUserDeleteRows="False" IsReadOnly="False" RowBackground="White" AlternatingRowBackground="#F9F9F9"
-                      RowEditEnding="UsersDataGrid_RowEditEnding">
+                CanUserDeleteRows="False" IsReadOnly="False" RowBackground="White" AlternatingRowBackground="#F9F9F9"
+                RowEditEnding="UsersDataGrid_RowEditEnding">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="ФИО" Binding="{Binding ФИО}" Width="150"/>
                     <DataGridTextColumn Header="Логин" Binding="{Binding Логин}" Width="100"/>
@@ -46,11 +91,10 @@
 
             <!-- Панель действий -->
             <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10,0,0">
-                <Button Content="Добавить" Width="120" Height="40" Margin="5" Click="AddUserButton_Click"/>
-                <Button Content="Удалить" Width="120" Height="40" Margin="5" Click="DeleteUserButton_Click"/>
-                <Button Content="Установить пароль" Width="180" Height="40" Margin="5" Click="SetPasswordButton_Click"/>
-                <!-- Новая кнопка для просмотра результатов тестов сотрудника -->
-                <Button Content="Посмотреть результаты тестов" Width="220" Height="40" Margin="5" Click="ViewTestResults_Click"/>
+                <Button Content="Добавить" Style="{StaticResource ModernButtonStyle}" Width="120" Click="AddUserButton_Click"/>
+                <Button Content="Удалить" Style="{StaticResource ModernButtonStyle}" Width="120" Click="DeleteUserButton_Click"/>
+                <Button Content="Установить пароль" Style="{StaticResource ModernButtonStyle}" Width="180" Click="SetPasswordButton_Click"/>
+                <Button Content="Посмотреть результаты тестов" Style="{StaticResource ModernButtonStyle}" Width="220" Click="ViewTestResults_Click"/>
             </StackPanel>
         </Grid>
     </Border>

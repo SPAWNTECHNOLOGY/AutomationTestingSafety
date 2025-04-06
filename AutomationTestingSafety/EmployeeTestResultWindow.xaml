@@ -2,30 +2,140 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Результаты теста" Height="500" Width="700"
-        WindowStartupLocation="CenterScreen"
+        WindowStartupLocation="CenterScreen"   WindowState="Maximized"
         Background="#F5F5F5" FontFamily="Segoe UI">
+
+    <Window.Resources>
+        <!-- Основной цвет #4d7dc6 -->
+        <SolidColorBrush x:Key="PrimaryColor" Color="#4d7dc6"/>
+        <SolidColorBrush x:Key="PrimaryColorDark" Color="#3a6cb5"/>
+
+        <!-- Стиль для кнопок -->
+        <Style x:Key="PrimaryButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="{StaticResource PrimaryColor}"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="Padding" Value="8,4"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Height" Value="32"/>
+            <Setter Property="MinWidth" Value="120"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" CornerRadius="4">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="{StaticResource PrimaryColorDark}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Стиль для DataGrid -->
+        <Style TargetType="DataGrid">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="BorderBrush" Value="#CCCCCC"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="RowBackground" Value="White"/>
+            <Setter Property="AlternatingRowBackground" Value="#F5F5F5"/>
+            <Setter Property="GridLinesVisibility" Value="None"/>
+            <Setter Property="HeadersVisibility" Value="Column"/>
+            <Setter Property="AutoGenerateColumns" Value="False"/>
+            <Setter Property="CanUserAddRows" Value="False"/>
+            <Setter Property="CanUserDeleteRows" Value="False"/>
+            <Setter Property="IsReadOnly" Value="True"/>
+            <Setter Property="SelectionMode" Value="Single"/>
+            <Setter Property="SelectionUnit" Value="FullRow"/>
+            <Setter Property="ScrollViewer.CanContentScroll" Value="True"/>
+            <Setter Property="ScrollViewer.PanningMode" Value="Both"/>
+            <Setter Property="Stylus.IsFlicksEnabled" Value="False"/>
+        </Style>
+
+        <!-- Стиль для заголовков столбцов DataGrid -->
+        <Style TargetType="DataGridColumnHeader">
+            <Setter Property="Background" Value="{StaticResource PrimaryColor}"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Padding" Value="8,4"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="BorderThickness" Value="0"/>
+        </Style>
+
+        <!-- Стиль для ячеек DataGrid -->
+        <Style TargetType="DataGridCell">
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+            <Setter Property="Padding" Value="5"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="DataGridCell">
+                        <Border Background="{TemplateBinding Background}" 
+                                BorderBrush="{TemplateBinding BorderBrush}" 
+                                BorderThickness="{TemplateBinding BorderThickness}">
+                            <ContentPresenter VerticalAlignment="Center" Margin="5,0"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Стиль для строк DataGrid -->
+        <Style TargetType="DataGridRow">
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#E6F0FA"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+
     <Grid Margin="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
+
         <!-- Заголовок с общей информацией -->
-        <StackPanel Grid.Row="0" Margin="0,0,0,10">
-            <TextBlock x:Name="tbSummary" FontSize="18" FontWeight="Bold" TextWrapping="Wrap"/>
-        </StackPanel>
+        <Border Grid.Row="0" Background="White" CornerRadius="4" Padding="10" Margin="0,0,0,10">
+            <TextBlock x:Name="tbSummary" FontSize="16" FontWeight="SemiBold" TextWrapping="Wrap"/>
+        </Border>
+
         <!-- Список результатов по вопросам -->
-        <DataGrid x:Name="dgResults" Grid.Row="1" AutoGenerateColumns="False" CanUserAddRows="False">
+        <DataGrid x:Name="dgResults" Grid.Row="1">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Вопрос" Binding="{Binding QuestionText}" Width="*"/>
                 <DataGridTextColumn Header="Ваш ответ" Binding="{Binding YourAnswer}" Width="*"/>
                 <DataGridTextColumn Header="Правильный" Binding="{Binding CorrectAnswer}" Width="*"/>
-                <DataGridTextColumn Header="Результат" Binding="{Binding IsCorrectText}" Width="100"/>
+                <DataGridTextColumn Header="Результат" Binding="{Binding IsCorrectText}" Width="100">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="HorizontalAlignment" Value="Center"/>
+                            <Setter Property="FontWeight" Value="SemiBold"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsCorrect}" Value="True">
+                                    <Setter Property="Foreground" Value="Green"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding IsCorrect}" Value="False">
+                                    <Setter Property="Foreground" Value="Red"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
             </DataGrid.Columns>
         </DataGrid>
+
         <!-- Кнопка закрытия -->
-        <StackPanel Grid.Row="2" HorizontalAlignment="Center" Margin="10">
-            <Button Content="Закрыть" Width="120" Height="40" Click="CloseButton_Click"/>
+        <StackPanel Grid.Row="2" HorizontalAlignment="Center" Margin="0,10,0,0">
+            <Button Content="Закрыть" Style="{StaticResource PrimaryButtonStyle}" Click="CloseButton_Click"/>
         </StackPanel>
     </Grid>
 </Window>
