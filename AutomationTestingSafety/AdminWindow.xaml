@@ -37,7 +37,6 @@
                       CanUserDeleteRows="False" IsReadOnly="False" RowBackground="White" AlternatingRowBackground="#F9F9F9"
                       RowEditEnding="UsersDataGrid_RowEditEnding">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="ID" Binding="{Binding ID_Пользователя}" IsReadOnly="True" Width="50"/>
                     <DataGridTextColumn Header="ФИО" Binding="{Binding ФИО}" Width="150"/>
                     <DataGridTextColumn Header="Логин" Binding="{Binding Логин}" Width="100"/>
                     <DataGridTextColumn Header="Дата регистрации" Binding="{Binding ДатаРегистрации, StringFormat=d}" IsReadOnly="True" Width="120"/>

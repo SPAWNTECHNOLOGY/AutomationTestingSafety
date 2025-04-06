@@ -11,7 +11,7 @@ namespace AutomationTestingSafety
         {
             InitializeComponent();
             _employeeFio = employeeFio;
-            tbUserInfo.Text = $"Результаты тестов для сотрудника: {_employeeFio} (ID: {userId})";
+            tbUserInfo.Text = $"Результаты тестов для сотрудника: {_employeeFio}";
             dgTestResults.ItemsSource = results;
         }
 
@@ -59,7 +59,6 @@ namespace AutomationTestingSafety
             doc.Add(new iTextSharp.text.Paragraph(" "));
 
             // Основные данные результата
-            doc.Add(new iTextSharp.text.Paragraph($"ID результата: {result.TestResultId}", normalFont));
             doc.Add(new iTextSharp.text.Paragraph($"Время прохождения: {result.TimeTaken}", normalFont));
             doc.Add(new iTextSharp.text.Paragraph($"Набранные баллы: {result.Score}", normalFont));
             doc.Add(new iTextSharp.text.Paragraph($"Минимальный балл: {result.MinimalScore}", normalFont));

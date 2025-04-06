@@ -15,7 +15,6 @@
         <DataGrid x:Name="dgTestResults" Grid.Row="1" AutoGenerateColumns="False" CanUserAddRows="False" IsReadOnly="True"
                   RowBackground="White" AlternatingRowBackground="#F9F9F9">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="ID результата" Binding="{Binding TestResultId}" Width="80"/>
                 <DataGridTextColumn Header="Время прохождения" Binding="{Binding TimeTaken}" Width="100"/>
                 <DataGridTextColumn Header="Набрано" Binding="{Binding Score}" Width="80"/>
                 <DataGridTextColumn Header="Мин. балл" Binding="{Binding MinimalScore}" Width="80"/>
