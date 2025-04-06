@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using AutomationTestingSafety.Entities;
 
@@ -24,8 +25,6 @@ namespace AutomationTestingSafety
             lvAvailableTests.ItemsSource = tests;
         }
 
-
-        // Пример в EmployeeWindow.xaml.cs
         private void TakeTest_Click(object sender, RoutedEventArgs e)
         {
             if (lvAvailableTests.SelectedItem is TestEntity selectedTest)
@@ -36,7 +35,6 @@ namespace AutomationTestingSafety
                     MessageBox.Show("В выбранном тесте отсутствуют вопросы.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
                 }
-                // Здесь вместо 1 передаем реальный идентификатор пользователя (_userInfo.UserID, например)
                 EmployeeTestWindow testWindow = new EmployeeTestWindow(fullTest, _userInfo.UserID);
                 testWindow.Owner = this;
                 testWindow.ShowDialog();
@@ -47,20 +45,27 @@ namespace AutomationTestingSafety
             }
         }
 
-
-
-        private void ExitProfile(object sender, RoutedEventArgs e)
-        {
-            var loginWindow = new MainWindow();
-            loginWindow.Show();
-            this.Close();
-        }
-
         private void ChangePasswordButton_Click(object sender, RoutedEventArgs e)
         {
             ChangePasswordWindow changePasswordWindow = new ChangePasswordWindow(_userInfo);
             changePasswordWindow.Owner = this;
             changePasswordWindow.ShowDialog();
+        }
+
+        private void ExitProfile(object sender, RoutedEventArgs e)
+        {
+            new MainWindow().Show();
+            this.Close();
+        }
+
+        private void ViewTestResults_Click(object sender, RoutedEventArgs e)
+        {
+            // Получаем результаты тестов для текущего пользователя
+            List<TestResult> results = TestRepository.GetTestResultsForUser(_userInfo.UserID);
+            // Открываем окно для просмотра результатов
+            EmployeeResultsWindow resultsWindow = new EmployeeResultsWindow(_userInfo, results);
+            resultsWindow.Owner = this;
+            resultsWindow.ShowDialog();
         }
     }
 }

@@ -49,15 +49,15 @@
         </Grid.RowDefinitions>
         <!-- Верхняя панель с информацией и кнопками -->
         <DockPanel Grid.Row="0" LastChildFill="False">
-            <!-- Рамка с данными пользователя -->
             <Border Background="#4d7dc6" CornerRadius="4" Padding="10" DockPanel.Dock="Left" MaxWidth="600">
-                <TextBlock Name="lblUserInfo" FontSize="16" FontWeight="SemiBold" Foreground="White" 
-                   TextWrapping="Wrap" TextTrimming="CharacterEllipsis"/>
+                <TextBlock Name="lblUserInfo" FontSize="16" FontWeight="SemiBold" Foreground="White"
+                           TextWrapping="Wrap" TextTrimming="CharacterEllipsis"/>
             </Border>
-            <!-- Кнопки справа -->
             <StackPanel Orientation="Horizontal" DockPanel.Dock="Right">
                 <Button Content="Сменить пароль" Click="ChangePasswordButton_Click"/>
                 <Button Content="Выйти из профиля" Click="ExitProfile"/>
+                <!-- Новая кнопка для просмотра результатов тестов -->
+                <Button Content="Результаты тестов" Click="ViewTestResults_Click"/>
             </StackPanel>
         </DockPanel>
         <!-- Список доступных тестов -->

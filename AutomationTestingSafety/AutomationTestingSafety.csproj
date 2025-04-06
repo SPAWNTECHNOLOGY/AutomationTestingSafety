@@ -263,6 +263,9 @@
     <Compile Include="EditTestWindow.xaml.cs">
       <DependentUpon>EditTestWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="EmployeeResultsWindow.xaml.cs">
+      <DependentUpon>EmployeeResultsWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="EmployeeTestResultWindow.xaml.cs">
       <DependentUpon>EmployeeTestResultWindow.xaml</DependentUpon>
     </Compile>
@@ -304,6 +307,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="EditTestWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="EmployeeResultsWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
