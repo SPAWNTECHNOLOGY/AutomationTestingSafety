@@ -72,7 +72,15 @@
                     Orientation="Horizontal" 
                     HorizontalAlignment="Right" 
                     Margin="0,15,0,0">
-            <Button Content="Экспорт в CSV" 
+            <Button Content="Экспорт в Word" 
+                     Width="150" 
+                     Height="36"
+                     Background="#2A5C82"
+                     Foreground="White"
+                     BorderBrush="Transparent"
+                     Click="ExportButtonWord_Click"/>       
+
+            <Button Content="Экспорт в PDF" 
                     Width="150" 
                     Height="36"
                     Background="#2A5C82"
