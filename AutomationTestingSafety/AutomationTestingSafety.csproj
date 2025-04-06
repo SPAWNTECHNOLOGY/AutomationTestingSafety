@@ -260,6 +260,7 @@
     <Compile Include="ChangePasswordWindow.xaml.cs">
       <DependentUpon>ChangePasswordWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Database\Migration\QweryCreateTests.cs" />
     <Compile Include="EditTestWindow.xaml.cs">
       <DependentUpon>EditTestWindow.xaml</DependentUpon>
     </Compile>
