@@ -6,52 +6,64 @@
         xmlns:local="clr-namespace:AutomationTestingSafety"
         mc:Ignorable="d"
         Title="Авторизация | SAFETECH" 
-        Height="500" 
+        Height="570" 
         Width="400"
         WindowStartupLocation="CenterScreen"
         ResizeMode="NoResize"
-        Background="#FFD8D8D8"
+        Background="#F2F2FB"
         FontFamily="Segoe UI">
 
     <Window.Resources>
+        <!-- Основные цвета приложения -->
+        <!-- Ниже - пример глубоко-филетового оттенка. Подставьте нужные значения, если хотите ещё темнее/ярче -->
+        <SolidColorBrush x:Key="BrandBrush" Color="#230D69"/>
+        <SolidColorBrush x:Key="BrandBrushHover" Color="#1B0953"/>
+        <SolidColorBrush x:Key="BrandBrushPressed" Color="#10053A"/>
+
+        <!-- Цвет рамки полей ввода по умолчанию -->
+        <SolidColorBrush x:Key="DefaultBorderBrush" Color="#FFDDDDDD"/>
+
+        <!-- Стиль для TextBox -->
         <Style TargetType="TextBox">
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="Padding" Value="10"/>
             <Setter Property="Margin" Value="0,5,0,10"/>
-            <Setter Property="BorderBrush" Value="#FFDDDDDD"/>
+            <Setter Property="BorderBrush" Value="{StaticResource DefaultBorderBrush}"/>
             <Setter Property="Background" Value="White"/>
             <Setter Property="FontSize" Value="14"/>
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="BorderBrush" Value="#FF2C3E50"/>
+                    <Setter Property="BorderBrush" Value="{StaticResource BrandBrush}"/>
                 </Trigger>
                 <Trigger Property="IsFocused" Value="True">
-                    <Setter Property="BorderBrush" Value="#FF2C3E50"/>
+                    <Setter Property="BorderBrush" Value="{StaticResource BrandBrush}"/>
                     <Setter Property="BorderThickness" Value="1.5"/>
                 </Trigger>
             </Style.Triggers>
         </Style>
 
+        <!-- Стиль для PasswordBox -->
         <Style TargetType="PasswordBox">
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="Padding" Value="10"/>
             <Setter Property="Margin" Value="0,5,0,15"/>
-            <Setter Property="BorderBrush" Value="#FFDDDDDD"/>
+            <Setter Property="BorderBrush" Value="{StaticResource DefaultBorderBrush}"/>
             <Setter Property="Background" Value="White"/>
             <Setter Property="FontSize" Value="14"/>
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="BorderBrush" Value="#FF2C3E50"/>
+                    <Setter Property="BorderBrush" Value="{StaticResource BrandBrush}"/>
                 </Trigger>
                 <Trigger Property="IsFocused" Value="True">
-                    <Setter Property="BorderBrush" Value="#FF2C3E50"/>
+                    <Setter Property="BorderBrush" Value="{StaticResource BrandBrush}"/>
                     <Setter Property="BorderThickness" Value="1.5"/>
                 </Trigger>
             </Style.Triggers>
         </Style>
 
+        <!-- Стиль для Button -->
         <Style TargetType="Button">
-            <Setter Property="Background" Value="#FF2C3E50"/>
+            <Setter Property="Background" Value="{StaticResource BrandBrush}"/>
             <Setter Property="Foreground" Value="White"/>
             <Setter Property="Padding" Value="12"/>
             <Setter Property="BorderThickness" Value="0"/>
@@ -62,14 +74,15 @@
             <Setter Property="Margin" Value="0,10,0,0"/>
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="#FF1A2A38"/>
+                    <Setter Property="Background" Value="{StaticResource BrandBrushHover}"/>
                 </Trigger>
                 <Trigger Property="IsPressed" Value="True">
-                    <Setter Property="Background" Value="#FF0F1C26"/>
+                    <Setter Property="Background" Value="{StaticResource BrandBrushPressed}"/>
                 </Trigger>
             </Style.Triggers>
         </Style>
 
+        <!-- Стиль для TextBlock -->
         <Style TargetType="TextBlock">
             <Setter Property="FontSize" Value="14"/>
             <Setter Property="Foreground" Value="#FF666666"/>
@@ -80,18 +93,28 @@
         <Border CornerRadius="10" 
                 Background="White" 
                 BorderThickness="1" 
-                BorderBrush="#FFDDDDDD"
+                BorderBrush="{StaticResource DefaultBorderBrush}"
                 Width="350"
                 VerticalAlignment="Center"
                 HorizontalAlignment="Center"
                 Padding="25">
+            <!-- Добавляем DropShadow для современного вида -->
+            <Border.Effect>
+                <DropShadowEffect Color="#AA000000" BlurRadius="10" ShadowDepth="5"/>
+            </Border.Effect>
 
             <StackPanel>
+                <!-- Логотип -->
+                <Image Source="Source/Images/Logo.png" 
+                       Height="80" 
+                       Margin="0,0,0,15" 
+                       HorizontalAlignment="Center"/>
+
                 <!-- Заголовок -->
                 <TextBlock Text="SAFETECH" 
                            FontSize="26" 
                            FontWeight="Bold" 
-                           Foreground="#FF2C3E50"
+                           Foreground="{StaticResource BrandBrush}"
                            HorizontalAlignment="Center"
                            Margin="0,0,0,15"/>
 
