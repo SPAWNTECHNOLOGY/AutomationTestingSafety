@@ -2,17 +2,24 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local="clr-namespace:AutomationTestingSafety"
-        Title="Личный кабинет сотрудника" Height="450" Width="800"
-       WindowStartupLocation="CenterScreen"  WindowState="Maximized"
-        Background="#FFF" FontFamily="Segoe UI">
+        Title="Личный кабинет сотрудника" Height="700" Width="1500"
+        WindowStartupLocation="CenterScreen"
+        Background="#F2F2FB" FontFamily="Segoe UI"
+        Icon="Source/Images/Logo.png">
     <Window.Resources>
-        <!-- Стиль для кнопок -->
-        <Style TargetType="Button">
-            <Setter Property="Background" Value="#4d7dc6"/>
+        <!-- Основная брендовая палитра -->
+        <SolidColorBrush x:Key="BrandBrush" Color="#230D69"/>
+        <SolidColorBrush x:Key="BrandBrushHover" Color="#1B0953"/>
+        <SolidColorBrush x:Key="BrandBrushPressed" Color="#10053A"/>
+        <SolidColorBrush x:Key="ControlBorderBrush" Color="#DDD"/>
+
+        <!-- Единый стиль для кнопок -->
+        <Style x:Key="ModernButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="{StaticResource BrandBrush}"/>
             <Setter Property="Foreground" Value="White"/>
             <Setter Property="FontWeight" Value="SemiBold"/>
             <Setter Property="Margin" Value="5"/>
-            <Setter Property="Padding" Value="5,2"/>
+            <Setter Property="Padding" Value="10,5"/>
             <Setter Property="Cursor" Value="Hand"/>
             <Setter Property="BorderThickness" Value="0"/>
             <Setter Property="Height" Value="40"/>
@@ -20,46 +27,56 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
-                        <Border Background="{TemplateBinding Background}" CornerRadius="5">
+                        <Border x:Name="buttonBorder"
+                                Background="{TemplateBinding Background}"
+                                CornerRadius="4"
+                                SnapsToDevicePixels="True">
                             <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Background" Value="#005A9E"/>
+                                <Setter TargetName="buttonBorder" Property="Background" Value="{StaticResource BrandBrushHover}"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="buttonBorder" Property="Background" Value="{StaticResource BrandBrushPressed}"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
         </Style>
+
         <!-- Стиль для заголовков столбцов ListView -->
         <Style TargetType="GridViewColumnHeader">
-            <Setter Property="Background" Value="#4d7dc6"/>
+            <Setter Property="Background" Value="{StaticResource BrandBrush}"/>
             <Setter Property="Foreground" Value="White"/>
             <Setter Property="FontWeight" Value="Bold"/>
             <Setter Property="Padding" Value="6"/>
             <Setter Property="HorizontalContentAlignment" Value="Left"/>
         </Style>
     </Window.Resources>
+
     <Grid Margin="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
+
         <!-- Верхняя панель с информацией и кнопками -->
         <DockPanel Grid.Row="0" LastChildFill="False">
-            <Border Background="#4d7dc6" CornerRadius="4" Padding="10" DockPanel.Dock="Left" MaxWidth="600">
+            <Border Background="{StaticResource BrandBrush}" 
+                    CornerRadius="4" Padding="10" DockPanel.Dock="Left" MaxWidth="700">
                 <TextBlock Name="lblUserInfo" FontSize="16" FontWeight="SemiBold" Foreground="White"
                            TextWrapping="Wrap" TextTrimming="CharacterEllipsis"/>
             </Border>
             <StackPanel Orientation="Horizontal" DockPanel.Dock="Right">
-                <Button Content="Сменить пароль" Click="ChangePasswordButton_Click"/>
-                <!-- Новая кнопка для просмотра результатов тестов -->
-                <Button Content="Результаты тестов" Click="ViewTestResults_Click"/>
-                <Button Content="Выйти из профиля" Click="ExitProfile"/>
+                <Button Content="Сменить пароль" Style="{StaticResource ModernButtonStyle}" Click="ChangePasswordButton_Click"/>
+                <Button Content="Результаты тестов" Style="{StaticResource ModernButtonStyle}" Click="ViewTestResults_Click"/>
+                <Button Content="Выйти из профиля" Style="{StaticResource ModernButtonStyle}" Click="ExitProfile"/>
             </StackPanel>
         </DockPanel>
+
         <!-- Список доступных тестов -->
         <ListView x:Name="lvAvailableTests" Grid.Row="1" Margin="0,10,0,10" SelectionMode="Single">
             <ListView.View>
@@ -72,7 +89,9 @@
                 </GridView>
             </ListView.View>
         </ListView>
+
         <!-- Кнопка для начала тестирования -->
-        <Button Content="Пройти тест" Grid.Row="2" HorizontalAlignment="Center" Click="TakeTest_Click"/>
+        <Button Content="Пройти тест" Grid.Row="2" HorizontalAlignment="Center" 
+                Style="{StaticResource ModernButtonStyle}" Click="TakeTest_Click"/>
     </Grid>
 </Window>
