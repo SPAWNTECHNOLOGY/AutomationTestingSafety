@@ -3,21 +3,22 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local="clr-namespace:AutomationTestingSafety.Entities"
         xmlns:convertor="clr-namespace:AutomationTestingSafety"
-        Title="Редактирование теста" Height="600" Width="1000"
-        WindowStartupLocation="CenterScreen"  WindowState="Maximized"
-        Background="#FFF" FontFamily="Segoe UI">
-
+        Title="Редактирование теста" Height="600" Width="1500"
+        WindowStartupLocation="CenterScreen" 
+        Background="#F2F2FB" FontFamily="Segoe UI"
+        Icon="Source/Images/Logo.png">
     <Window.Resources>
         <!-- Конвертер для отображения булевого значения -->
         <convertor:BooleanToAnswerConverter x:Key="BoolToAnswerConverter"/>
-        <!-- Основной цвет #4d7dc6 -->
-        <SolidColorBrush x:Key="PrimaryColor" Color="#4d7dc6"/>
-        <SolidColorBrush x:Key="PrimaryColorDark" Color="#3a6cb5"/>
-        <SolidColorBrush x:Key="PrimaryColorLight" Color="#6a9ad6"/>
 
-        <!-- Стиль для кнопок -->
+        <!-- Единая цветовая палитра -->
+        <SolidColorBrush x:Key="BrandBrush" Color="#230D69"/>
+        <SolidColorBrush x:Key="BrandBrushHover" Color="#1B0953"/>
+        <SolidColorBrush x:Key="BrandBrushPressed" Color="#10053A"/>
+
+        <!-- Стиль для основных кнопок -->
         <Style x:Key="PrimaryButtonStyle" TargetType="Button">
-            <Setter Property="Background" Value="{StaticResource PrimaryColor}"/>
+            <Setter Property="Background" Value="{StaticResource BrandBrush}"/>
             <Setter Property="Foreground" Value="White"/>
             <Setter Property="FontWeight" Value="SemiBold"/>
             <Setter Property="Margin" Value="5"/>
@@ -30,12 +31,15 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
-                        <Border Background="{TemplateBinding Background}" CornerRadius="4">
+                        <Border x:Name="btnBorder" Background="{TemplateBinding Background}" CornerRadius="4">
                             <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Background" Value="{StaticResource PrimaryColorDark}"/>
+                                <Setter TargetName="btnBorder" Property="Background" Value="{StaticResource BrandBrushHover}"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="btnBorder" Property="Background" Value="{StaticResource BrandBrushPressed}"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -66,7 +70,7 @@
 
         <!-- Стиль для заголовков GridView -->
         <Style TargetType="GridViewColumnHeader">
-            <Setter Property="Background" Value="{StaticResource PrimaryColor}"/>
+            <Setter Property="Background" Value="{StaticResource BrandBrush}"/>
             <Setter Property="Foreground" Value="White"/>
             <Setter Property="FontWeight" Value="SemiBold"/>
             <Setter Property="Padding" Value="8,4"/>
