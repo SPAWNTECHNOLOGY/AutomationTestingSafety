@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AutomationTestingSafety"
         mc:Ignorable="d"
+        WindowStartupLocation="CenterScreen" 
         Title="Личный кабинет администратора" 
         Height="600" 
         Width="1200"

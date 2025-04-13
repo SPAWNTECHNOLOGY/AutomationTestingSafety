@@ -4,7 +4,7 @@
         xmlns:local="clr-namespace:AutomationTestingSafety.Entities"
         xmlns:convertor="clr-namespace:AutomationTestingSafety"
         Title="Личный кабинет специалиста" Height="700" Width="1000" WindowState="Maximized"
-        WindowStartupLocation="CenterScreen" Background="#FFF" FontFamily="Segoe UI">
+        WindowStartupLocation="CenterScreen"  Background="#FFF" FontFamily="Segoe UI">
     <Window.Resources>
         <!-- Конвертер для отображения булевого значения -->
         <convertor:BooleanToAnswerConverter x:Key="BoolToAnswerConverter"/>

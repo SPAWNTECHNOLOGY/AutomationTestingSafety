@@ -4,7 +4,7 @@
         xmlns:local="clr-namespace:AutomationTestingSafety.Entities"
         xmlns:convertor="clr-namespace:AutomationTestingSafety"
         Title="Редактирование теста" Height="600" Width="1000"
-        WindowStartupLocation="CenterScreen" WindowState="Maximized"
+        WindowStartupLocation="CenterScreen"  WindowState="Maximized"
         Background="#FFF" FontFamily="Segoe UI">
 
     <Window.Resources>

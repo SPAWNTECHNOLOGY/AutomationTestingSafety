@@ -4,7 +4,7 @@
         Title="Добавление пользователя" 
         Height="350" 
         Width="400" 
-        WindowStartupLocation="CenterOwner" 
+        WindowStartupLocation="CenterScreen" 
         Icon="Source/Images/Logo.png"
         Background="#F2F2FB">
 
