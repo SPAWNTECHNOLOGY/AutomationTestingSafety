@@ -180,7 +180,7 @@
         <!-- Панель сохранения изменений -->
         <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.Column="0" HorizontalAlignment="Center" Margin="0,10,0,0">
             <Button Content="Сохранить" Style="{StaticResource PrimaryButtonStyle}" Click="SaveTest_Click"/>
-            <Button Content="Отмена" Style="{StaticResource SecondaryButtonStyle}" Click="Cancel_Click"/>
+            <Button Content="Отмена" Style="{StaticResource PrimaryButtonStyle}" Click="Cancel_Click"/>
         </StackPanel>
 
         <!-- Дерево структуры теста с отображением минимального балла -->
