@@ -3,10 +3,86 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Результаты тестов сотрудника" 
         Height="600" Width="900"
-        WindowState="Maximized"
         WindowStartupLocation="CenterScreen" 
         Background="#FFF" 
-        FontFamily="Segoe UI">
+        FontFamily="Segoe UI"
+        Icon="Source/Images/Logo.png">
+
+    <Window.Resources>
+        <!-- Основные цвета приложения -->
+        <SolidColorBrush x:Key="BrandBrush" Color="#230D69"/>
+        <SolidColorBrush x:Key="BrandBrushHover" Color="#1B0953"/>
+        <SolidColorBrush x:Key="BrandBrushPressed" Color="#10053A"/>
+        <SolidColorBrush x:Key="ControlBorderBrush" Color="#FFDDDDDD"/>
+
+        <!-- Стиль для заголовка -->
+        <Style x:Key="HeaderBorderStyle" TargetType="Border">
+            <Setter Property="Background" Value="{StaticResource BrandBrush}"/>
+            <Setter Property="CornerRadius" Value="4"/>
+            <Setter Property="Padding" Value="10"/>
+            <Setter Property="Margin" Value="0,0,0,15"/>
+        </Style>
+
+        <!-- Универсальный стиль для кнопок -->
+        <Style x:Key="ModernButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="{StaticResource BrandBrush}"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Padding" Value="8,4"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="buttonBorder" Background="{TemplateBinding Background}" 
+                                BorderBrush="{TemplateBinding BorderBrush}" 
+                                BorderThickness="{TemplateBinding BorderThickness}" 
+                                CornerRadius="3">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="buttonBorder" Property="Background" Value="{StaticResource BrandBrushHover}"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="buttonBorder" Property="Background" Value="{StaticResource BrandBrushPressed}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Стиль для кнопок со сторонним оформлением (например, "Закрыть") -->
+        <Style x:Key="TransparentButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="Black"/>
+            <Setter Property="BorderBrush" Value="{StaticResource BrandBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Padding" Value="8,4"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="buttonBorder" Background="{TemplateBinding Background}" 
+                                BorderBrush="{TemplateBinding BorderBrush}" 
+                                BorderThickness="{TemplateBinding BorderThickness}" 
+                                CornerRadius="3">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="buttonBorder" Property="BorderBrush" Value="{StaticResource BrandBrushHover}"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="buttonBorder" Property="BorderBrush" Value="{StaticResource BrandBrushPressed}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
 
     <Grid Margin="15">
         <Grid.RowDefinitions>
@@ -16,7 +92,7 @@
         </Grid.RowDefinitions>
 
         <!-- Заголовок -->
-        <Border Grid.Row="0" Background="#4d7dc6" CornerRadius="4" Padding="10" Margin="0,0,0,15">
+        <Border Grid.Row="0" Style="{StaticResource HeaderBorderStyle}">
             <TextBlock x:Name="tbUserInfo" 
                        FontSize="16" 
                        FontWeight="Medium"
@@ -39,7 +115,6 @@
                   FontSize="14"
                   VerticalGridLinesBrush="#E5E7EB"
                   HorizontalGridLinesBrush="#E5E7EB">
-
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Время прохождения" 
                                    Binding="{Binding TimeTaken}" 
@@ -74,56 +149,22 @@
                     HorizontalAlignment="Right" 
                     Margin="0,15,0,0">
             <Button Content="Экспорт в Word" 
-                     Width="150" 
-                     Height="36"
-                     Background="#4d7dc6"
-                     Foreground="White"
-                     BorderBrush="Transparent"
-                     Click="ExportButtonWord_Click"/>       
+                    Width="150" 
+                    Height="36"
+                    Style="{StaticResource ModernButtonStyle}"
+                    Click="ExportButtonWord_Click"/>
 
             <Button Content="Экспорт в PDF" 
                     Width="150" 
                     Height="36"
-                    Background="#4d7dc6"
-                    Foreground="White"
-                    BorderBrush="Transparent"
+                    Style="{StaticResource ModernButtonStyle}"
                     Click="ExportButton_Click"/>
 
             <Button Content="Закрыть" 
                     Width="120" 
                     Height="36"
-                    Background="Transparent"
-                    Foreground="#2A5C82"
-                    BorderBrush="#2A5C82"
+                    Style="{StaticResource TransparentButtonStyle}"
                     Click="CloseButton_Click"/>
         </StackPanel>
     </Grid>
-
-    <!-- Стиль для кнопок -->
-    <Window.Resources>
-        <Style x:Key="ModernButtonStyle" TargetType="Button">
-            <Setter Property="Background" Value="#2A5C82"/>
-            <Setter Property="Foreground" Value="White"/>
-            <Setter Property="BorderBrush" Value="Transparent"/>
-            <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="Cursor" Value="Hand"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Border Background="{TemplateBinding Background}"
-                                BorderBrush="{TemplateBinding BorderBrush}"
-                                BorderThickness="{TemplateBinding BorderThickness}"
-                                CornerRadius="3">
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        </Border>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-            <Style.Triggers>
-                <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="#1E4A6E"/>
-                </Trigger>
-            </Style.Triggers>
-        </Style>
-    </Window.Resources>
 </Window>
