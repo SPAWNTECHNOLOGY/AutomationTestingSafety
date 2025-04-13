@@ -1,7 +1,7 @@
 ﻿<Window x:Class="AutomationTestingSafety.EmployeeTestResultWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Результаты теста" Height="500" Width="700"
+        Title="Результаты теста" Height="500" Width="1000"
         WindowStartupLocation="CenterScreen" 
         Background="#F2F2FB" FontFamily="Segoe UI"
         Icon="Source/Images/Logo.png">

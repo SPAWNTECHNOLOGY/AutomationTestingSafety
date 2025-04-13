@@ -2,15 +2,22 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Прохождение теста" Height="600" Width="800"
-        WindowStartupLocation="CenterScreen"  WindowState="Maximized"
-        Background="#F5F5F5" FontFamily="Segoe UI">
+        WindowStartupLocation="CenterScreen" 
+        Background="#F2F2FB" FontFamily="Segoe UI"
+        Icon="Source/Images/Logo.png">
     <Window.Resources>
-        <!-- Стиль для кнопок, как в предыдущем примере -->
-        <Style TargetType="Button">
-            <Setter Property="Background" Value="#4d7dc6"/>
+        <!-- Основная брендовая палитра -->
+        <SolidColorBrush x:Key="BrandBrush" Color="#230D69"/>
+        <SolidColorBrush x:Key="BrandBrushHover" Color="#1B0953"/>
+        <SolidColorBrush x:Key="BrandBrushPressed" Color="#10053A"/>
+        <SolidColorBrush x:Key="ControlBorderBrush" Color="#DDD"/>
+
+        <!-- Универсальный стиль для кнопок -->
+        <Style x:Key="ModernButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="{StaticResource BrandBrush}"/>
             <Setter Property="Foreground" Value="White"/>
             <Setter Property="FontWeight" Value="SemiBold"/>
-            <Setter Property="Margin" Value="5"/>
+            <Setter Property="Margin" Value="8"/>
             <Setter Property="Padding" Value="5,2"/>
             <Setter Property="Cursor" Value="Hand"/>
             <Setter Property="BorderThickness" Value="0"/>
@@ -19,54 +26,101 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
-                        <Border Background="{TemplateBinding Background}"
-                                CornerRadius="5">
-                            <ContentPresenter HorizontalAlignment="Center"
+                        <Border x:Name="buttonBorder" 
+                                Background="{TemplateBinding Background}" 
+                                CornerRadius="5" 
+                                SnapsToDevicePixels="True">
+                            <ContentPresenter HorizontalAlignment="Center" 
                                               VerticalAlignment="Center"/>
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Background" Value="#005A9E"/>
+                                <Setter TargetName="buttonBorder" 
+                                        Property="Background" 
+                                        Value="{StaticResource BrandBrushHover}"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="buttonBorder" 
+                                        Property="Background" 
+                                        Value="{StaticResource BrandBrushPressed}"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
         </Style>
+
+        <!-- Стиль для текстового блока вопроса -->
+        <Style x:Key="QuestionTextBlockStyle" TargetType="TextBlock">
+            <!-- Можно увеличить размер, если используется стиль, но в данном примере он будет переопределён -->
+            <Setter Property="FontSize" Value="24"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+            <Setter Property="Margin" Value="0,0,0,10"/>
+        </Style>
+
+        <!-- Стиль для обёртки блока вопроса (фиксированная ширина при расширении экрана) -->
+        <Style x:Key="QuestionBorderStyle" TargetType="Border">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="Padding" Value="10"/>
+            <Setter Property="CornerRadius" Value="5"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="BorderBrush" Value="{StaticResource ControlBorderBrush}"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="MaxWidth" Value="700"/>
+            <Setter Property="Margin" Value="0,0,0,10"/>
+        </Style>
+
+        <!-- Новый стиль для радио-кнопок -->
+        <Style x:Key="AnswerRadioButtonStyle" TargetType="RadioButton">
+            <Setter Property="FontSize" Value="18"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="5"/>
+        </Style>
     </Window.Resources>
+
     <Grid Margin="20">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
-            <!-- Таймер и счетчик -->
+            <!-- Таймер и счётчик -->
             <RowDefinition Height="*"/>
-            <!-- Вопрос и варианты -->
-            <RowDefinition Height="Auto"/>
             <!-- Панель навигации -->
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
+
         <!-- Таймер и счётчик вопросов -->
         <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Right">
             <TextBlock x:Name="tbTimer" FontSize="20" FontWeight="Bold" Margin="0,0,20,0"/>
             <TextBlock x:Name="tbQuestionCounter" FontSize="14" FontWeight="SemiBold" VerticalAlignment="Center"/>
         </StackPanel>
-        <!-- Вопрос и варианты ответов -->
-        <StackPanel Grid.Row="1" Background="White">
-            <TextBlock x:Name="tbQuestion" FontSize="18" TextWrapping="Wrap" Margin="0,0,0,10"/>
+
+        <!-- Блок вопроса и вариантов ответов -->
+        <StackPanel Grid.Row="1" HorizontalAlignment="Center">
+            <!-- Обёртка для текста вопроса для ограничения ширины -->
+            <Border Style="{StaticResource QuestionBorderStyle}">
+                <!-- Увеличение размера текста вопроса до 28 -->
+                <TextBlock x:Name="tbQuestion" 
+                           Style="{StaticResource QuestionTextBlockStyle}" 
+                           FontSize="20"/>
+            </Border>
+            <!-- Список вариантов ответов -->
             <ListBox x:Name="lbAnswers">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <RadioButton GroupName="AnswersGroup" 
+                        <RadioButton GroupName="AnswersGroup"  
                                      Content="{Binding Text}" 
                                      Tag="{Binding Id}" 
-                                     IsChecked="{Binding IsSelected, Mode=TwoWay}"/>
+                                     IsChecked="{Binding IsSelected, Mode=TwoWay}"
+                                     Style="{StaticResource AnswerRadioButtonStyle}"/>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
         </StackPanel>
+
         <!-- Панель навигации -->
         <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center" Margin="10">
-            <Button x:Name="btnPrev" Content="Предыдущий" Click="PrevButton_Click"/>
-            <Button x:Name="btnNext" Content="Следующий" Click="NextButton_Click"/>
-            <Button x:Name="btnFinish" Content="Завершить тест" Click="FinishButton_Click"/>
+            <Button x:Name="btnPrev" Content="Предыдущий" Style="{StaticResource ModernButtonStyle}" Click="PrevButton_Click"/>
+            <Button x:Name="btnNext" Content="Следующий" Style="{StaticResource ModernButtonStyle}" Click="NextButton_Click"/>
+            <Button x:Name="btnFinish" Content="Завершить тест" Style="{StaticResource ModernButtonStyle}" Click="FinishButton_Click"/>
         </StackPanel>
     </Grid>
 </Window>
