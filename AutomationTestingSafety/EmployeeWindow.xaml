@@ -55,9 +55,9 @@
             </Border>
             <StackPanel Orientation="Horizontal" DockPanel.Dock="Right">
                 <Button Content="Сменить пароль" Click="ChangePasswordButton_Click"/>
-                <Button Content="Выйти из профиля" Click="ExitProfile"/>
                 <!-- Новая кнопка для просмотра результатов тестов -->
                 <Button Content="Результаты тестов" Click="ViewTestResults_Click"/>
+                <Button Content="Выйти из профиля" Click="ExitProfile"/>
             </StackPanel>
         </DockPanel>
         <!-- Список доступных тестов -->
