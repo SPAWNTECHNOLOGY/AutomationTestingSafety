@@ -5,13 +5,22 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AutomationTestingSafety"
         mc:Ignorable="d"
-        Title="Личный кабинет администратора" Height="600" Width="800"
-        WindowState="Maximized"
-        Background="#FFF" FontFamily="Segoe UI">
+        Title="Личный кабинет администратора" 
+        Height="600" 
+        Width="1200"
+        Background="#FFF" 
+        FontFamily="Segoe UI"
+        Icon="Source/Images/Logo.png">
     <Window.Resources>
-        <!-- Стиль для кнопок -->
+        <!-- Основные цвета приложения -->
+        <SolidColorBrush x:Key="BrandBrush" Color="#230D69"/>
+        <SolidColorBrush x:Key="BrandBrushHover" Color="#1B0953"/>
+        <SolidColorBrush x:Key="BrandBrushPressed" Color="#10053A"/>
+        <SolidColorBrush x:Key="ControlBorderBrush" Color="#DDD"/>
+
+        <!-- Универсальный стиль для кнопок -->
         <Style x:Key="ModernButtonStyle" TargetType="Button">
-            <Setter Property="Background" Value="#4d7dc6"/>
+            <Setter Property="Background" Value="{StaticResource BrandBrush}"/>
             <Setter Property="Foreground" Value="White"/>
             <Setter Property="FontWeight" Value="SemiBold"/>
             <Setter Property="Margin" Value="8"/>
@@ -24,26 +33,34 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
-                        <Border Background="{TemplateBinding Background}" CornerRadius="4" SnapsToDevicePixels="True">
+                        <Border x:Name="buttonBorder" 
+                                Background="{TemplateBinding Background}" 
+                                CornerRadius="4" 
+                                SnapsToDevicePixels="True">
                             <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Background" Value="#1E4A6E"/>
+                                <Setter TargetName="buttonBorder" Property="Background" Value="{StaticResource BrandBrushHover}"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="buttonBorder" Property="Background" Value="{StaticResource BrandBrushPressed}"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
         </Style>
+
         <!-- Стиль для заголовков DataGrid -->
         <Style TargetType="DataGridColumnHeader">
-            <Setter Property="Background" Value="#4d7dc6"/>
+            <Setter Property="Background" Value="{StaticResource BrandBrush}"/>
             <Setter Property="Foreground" Value="White"/>
             <Setter Property="FontWeight" Value="Bold"/>
             <Setter Property="HorizontalContentAlignment" Value="Left"/>
             <Setter Property="Padding" Value="6"/>
         </Style>
+
         <!-- Стиль для текстового заголовка -->
         <Style x:Key="HeaderTextStyle" TargetType="TextBlock">
             <Setter Property="FontSize" Value="18"/>
@@ -53,7 +70,8 @@
             <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
         </Style>
     </Window.Resources>
-    <Border Background="White" BorderBrush="#DDD" BorderThickness="1" CornerRadius="5" Padding="20" Margin="20">
+
+    <Border Background="White" BorderBrush="{StaticResource ControlBorderBrush}" BorderThickness="1" CornerRadius="5" Padding="20" Margin="20">
         <Grid>
             <Grid.RowDefinitions>
                 <!-- Информация о пользователе -->
@@ -67,7 +85,7 @@
             </Grid.RowDefinitions>
 
             <!-- Информация о пользователе -->
-            <Border Background="#4d7dc6" CornerRadius="4" Padding="10" Margin="0,0,0,10" HorizontalAlignment="Left" MaxWidth="900">
+            <Border Background="{StaticResource BrandBrush}" CornerRadius="4" Padding="10" Margin="0,0,0,10" HorizontalAlignment="Left" MaxWidth="900">
                 <TextBlock x:Name="lblUserInfo" Style="{StaticResource HeaderTextStyle}"/>
             </Border>
 
@@ -79,8 +97,8 @@
 
             <!-- DataGrid для списка пользователей (без колонки ID) -->
             <DataGrid x:Name="UsersDataGrid" Grid.Row="2" AutoGenerateColumns="False" CanUserAddRows="False" 
-                CanUserDeleteRows="False" IsReadOnly="False" RowBackground="White" AlternatingRowBackground="#F9F9F9"
-                RowEditEnding="UsersDataGrid_RowEditEnding">
+                      CanUserDeleteRows="False" IsReadOnly="False" RowBackground="White" AlternatingRowBackground="#F9F9F9"
+                      RowEditEnding="UsersDataGrid_RowEditEnding">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="ФИО" Binding="{Binding ФИО}" Width="150"/>
                     <DataGridTextColumn Header="Дата рождения" Binding="{Binding ДатаРождения}" Width="150"/>
