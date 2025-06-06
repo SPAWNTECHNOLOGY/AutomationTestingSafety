@@ -105,7 +105,11 @@
             <TextBlock Text="Тест:" VerticalAlignment="Center" Margin="0,0,8,0"/>
             <TextBox x:Name="tbFilterTest" Width="150" Margin="0,0,16,0" VerticalAlignment="Center"/>
             <TextBlock Text="Время прохождения:" VerticalAlignment="Center" Margin="0,0,8,0"/>
-            <TextBox x:Name="tbFilterTimeTaken" Width="150" Margin="0,0,16,0" VerticalAlignment="Center"/>
+            <TextBox x:Name="tbFilterTimeTaken" Width="100" Margin="0,0,8,0" VerticalAlignment="Center"/>
+            <ComboBox x:Name="cbTimeFilterType" Width="107" Margin="0,0,16,0" VerticalAlignment="Center">
+                <ComboBoxItem Content="Больше" Tag="Greater"/>
+                <ComboBoxItem Content="Меньше" Tag="Less"/>
+            </ComboBox>
             <TextBlock Text="Сортировка по:" VerticalAlignment="Center" Margin="0,0,8,0"/>
             <ComboBox x:Name="cbSortField" Width="160" Margin="0,0,16,0" VerticalAlignment="Center">
                 <ComboBoxItem Content="Тест" Tag="TestName"/>

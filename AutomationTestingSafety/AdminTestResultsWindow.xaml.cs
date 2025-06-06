@@ -26,6 +26,7 @@ namespace AutomationTestingSafety
             dgTestResults.ItemsSource = results;
             tbFilterTest.TextChanged += FilterOrSortChanged;
             tbFilterTimeTaken.TextChanged += FilterOrSortChanged;
+            cbTimeFilterType.SelectionChanged += FilterOrSortChanged;
             cbSortField.SelectionChanged += FilterOrSortChanged;
         }
 
@@ -37,15 +38,23 @@ namespace AutomationTestingSafety
         private void ApplyFilterAndSort()
         {
             string testFilter = tbFilterTest.Text?.Trim().ToLower();
-            string timeTakenFilter = tbFilterTimeTaken.Text?.Trim().ToLower();
+            string timeTakenFilter = tbFilterTimeTaken.Text?.Trim();
+            string timeFilterType = (cbTimeFilterType.SelectedItem as ComboBoxItem)?.Tag as string;
             var filtered = _allResults.AsEnumerable();
             if (!string.IsNullOrEmpty(testFilter))
             {
                 filtered = filtered.Where(r => (r.TestName ?? "").ToLower().Contains(testFilter));
             }
-            if (!string.IsNullOrEmpty(timeTakenFilter))
+            if (!string.IsNullOrEmpty(timeTakenFilter) && TimeSpan.TryParse(timeTakenFilter, out TimeSpan filterTime))
             {
-                filtered = filtered.Where(r => (r.TimeTaken ?? "").ToLower().Contains(timeTakenFilter));
+                if (timeFilterType == "Greater")
+                {
+                    filtered = filtered.Where(r => TimeSpan.TryParse(r.TimeTaken, out TimeSpan resultTime) && resultTime > filterTime);
+                }
+                else if (timeFilterType == "Less")
+                {
+                    filtered = filtered.Where(r => TimeSpan.TryParse(r.TimeTaken, out TimeSpan resultTime) && resultTime < filterTime);
+                }
             }
             // Сортировка
             string sortField = (cbSortField.SelectedItem as ComboBoxItem)?.Tag as string;
