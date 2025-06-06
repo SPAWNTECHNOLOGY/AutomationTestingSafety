@@ -127,6 +127,7 @@ namespace AutomationTestingSafety
             doc.Add(new iTextSharp.text.Paragraph("Результаты тестирования", titleFont));
             doc.Add(new iTextSharp.text.Paragraph(" "));
             doc.Add(new iTextSharp.text.Paragraph($"Сотрудник: {employeeFio}", normalFont));
+            doc.Add(new iTextSharp.text.Paragraph($"Тест: {result.TestName}", normalFont));
             doc.Add(new iTextSharp.text.Paragraph(" "));
             doc.Add(new iTextSharp.text.Paragraph($"Время прохождения: {result.TimeTaken}", normalFont));
             doc.Add(new iTextSharp.text.Paragraph($"Набранные баллы: {result.Score}", normalFont));
@@ -172,6 +173,7 @@ namespace AutomationTestingSafety
 
                 // Основная информация
                 AddFormattedParagraph(body, $"Сотрудник: {employeeFio}", spacingAfter: 200);
+                AddFormattedParagraph(body, $"Тест: {result.TestName}", spacingAfter: 200);
                 AddFormattedParagraph(body, $"Время прохождения: {result.TimeTaken}", spacingAfter: 200);
                 AddFormattedParagraph(body, $"Набранные баллы: {result.Score}", spacingAfter: 200);
                 AddFormattedParagraph(body, $"Минимальный балл: {result.MinimalScore}", spacingAfter: 200);
