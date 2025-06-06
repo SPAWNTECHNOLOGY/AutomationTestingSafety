@@ -16,5 +16,6 @@ namespace AutomationTestingSafety.Entities
         public int MinimalScore { get; set; }
         public string Status { get; set; }
         public string Details { get; set; }
+        public string TestName { get; set; }
     }
 }

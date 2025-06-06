@@ -1,7 +1,7 @@
 ﻿<Window x:Class="AutomationTestingSafety.EmployeeResultsWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Результаты тестов" Height="500" Width="800"
+        Title="Результаты тестов" Height="500" Width="1100"
         WindowStartupLocation="CenterScreen"  
         Background="#F2F2FB" FontFamily="Segoe UI"
         Icon="Source/Images/Logo.png">
@@ -73,10 +73,11 @@
                       BorderThickness="0" Background="Transparent" ColumnHeaderHeight="40" RowHeight="35" FontSize="14"
                       VerticalGridLinesBrush="#E5E7EB" HorizontalGridLinesBrush="#E5E7EB">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="Время" Binding="{Binding TimeTaken}" Width="150"/>
-                    <DataGridTextColumn Header="Набрано" Binding="{Binding Score}" Width="150"/>
-                    <DataGridTextColumn Header="Мин. балл" Binding="{Binding MinimalScore}" Width="150"/>
-                    <DataGridTextColumn Header="Статус" Binding="{Binding Status}" Width="150"/>
+                    <DataGridTextColumn Header="Время" Binding="{Binding TimeTaken}" Width="180"/>
+                    <DataGridTextColumn Header="Набрано" Binding="{Binding Score}" Width="180"/>
+                    <DataGridTextColumn Header="Мин. балл" Binding="{Binding MinimalScore}" Width="180"/>
+                    <DataGridTextColumn Header="Статус" Binding="{Binding Status}" Width="180"/>
+                    <DataGridTextColumn Header="Тест" Binding="{Binding TestName}" Width="300"/>
                 </DataGrid.Columns>
             </DataGrid>
             <!-- Панель действий -->

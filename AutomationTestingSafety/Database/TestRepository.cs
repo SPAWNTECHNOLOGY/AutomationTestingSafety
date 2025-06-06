@@ -328,10 +328,8 @@ namespace AutomationTestingSafety
                     {
                         while (reader.Read())
                         {
-                            results.Add(new TestResult
+                            var testResult = new TestResult
                             {
-                                // Если у вас TestResult имеет свойства с русскими именами, адаптируйте их соответственно.
-                                // Здесь для примера используем английские имена:
                                 TestResultId = Convert.ToInt32(reader["ID_Результата"]),
                                 UserId = Convert.ToInt32(reader["ID_Пользователя"]),
                                 TestId = Convert.ToInt32(reader["ID_Теста"]),
@@ -340,7 +338,11 @@ namespace AutomationTestingSafety
                                 MinimalScore = Convert.ToInt32(reader["МинимальныйБалл"]),
                                 Status = reader["Статус"].ToString(),
                                 Details = reader["Детали"].ToString()
-                            });
+                            };
+                            // Получаем наименование теста
+                            var testEntity = GetTestById(testResult.TestId);
+                            testResult.TestName = testEntity != null ? testEntity.Name : string.Empty;
+                            results.Add(testResult);
                         }
                     }
                 }
