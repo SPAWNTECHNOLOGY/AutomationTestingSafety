@@ -96,6 +96,15 @@
                 <Button Content="Выйти" Style="{StaticResource ModernButtonStyle}" Width="120" Click="ExitProfile"/>
             </StackPanel>
 
+            <!-- Фильтры -->
+            <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,16" VerticalAlignment="Center">
+                <TextBlock Text="Фильтр по ФИО:" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                <TextBox x:Name="tbFilterFIO" Width="150" Margin="0,0,16,0" VerticalAlignment="Center"/>
+                <TextBlock Text="Фильтр по должности:" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                <TextBox x:Name="tbFilterPosition" Width="150" Margin="0,0,16,0" VerticalAlignment="Center"/>
+                <Button Content="Сбросить фильтр" Style="{StaticResource ModernButtonStyle}" Width="140" Click="ResetFilter_Click"/>
+            </StackPanel>
+
             <!-- DataGrid для списка пользователей (без колонки ID) -->
             <DataGrid x:Name="UsersDataGrid" Grid.Row="2" AutoGenerateColumns="False" CanUserAddRows="False" 
                       CanUserDeleteRows="False" IsReadOnly="False" RowBackground="White" AlternatingRowBackground="#F9F9F9"

@@ -15,12 +15,60 @@ namespace AutomationTestingSafety
     public partial class AdminTestResultsWindow : Window
     {
         private string _employeeFio;
+        private List<TestResult> _allResults;
+
         public AdminTestResultsWindow(int userId, string employeeFio, List<TestResult> results)
         {
             InitializeComponent();
             _employeeFio = employeeFio;
             tbUserInfo.Text = $"Результаты тестов для сотрудника: {_employeeFio}";
+            _allResults = results;
             dgTestResults.ItemsSource = results;
+            tbFilterTest.TextChanged += FilterOrSortChanged;
+            tbFilterTimeTaken.TextChanged += FilterOrSortChanged;
+            cbSortField.SelectionChanged += FilterOrSortChanged;
+        }
+
+        private void FilterOrSortChanged(object sender, EventArgs e)
+        {
+            ApplyFilterAndSort();
+        }
+
+        private void ApplyFilterAndSort()
+        {
+            string testFilter = tbFilterTest.Text?.Trim().ToLower();
+            string timeTakenFilter = tbFilterTimeTaken.Text?.Trim().ToLower();
+            var filtered = _allResults.AsEnumerable();
+            if (!string.IsNullOrEmpty(testFilter))
+            {
+                filtered = filtered.Where(r => (r.TestName ?? "").ToLower().Contains(testFilter));
+            }
+            if (!string.IsNullOrEmpty(timeTakenFilter))
+            {
+                filtered = filtered.Where(r => (r.TimeTaken ?? "").ToLower().Contains(timeTakenFilter));
+            }
+            // Сортировка
+            string sortField = (cbSortField.SelectedItem as ComboBoxItem)?.Tag as string;
+            if (!string.IsNullOrEmpty(sortField))
+            {
+                switch (sortField)
+                {
+                    case "TestName": filtered = filtered.OrderBy(r => r.TestName); break;
+                    case "Score": filtered = filtered.OrderByDescending(r => r.Score); break;
+                    case "MinimalScore": filtered = filtered.OrderByDescending(r => r.MinimalScore); break;
+                    case "Status": filtered = filtered.OrderBy(r => r.Status); break;
+                    case "TimeTaken": filtered = filtered.OrderBy(r => r.TimeTaken); break;
+                }
+            }
+            dgTestResults.ItemsSource = filtered.ToList();
+        }
+
+        private void ResetFilter_Click(object sender, RoutedEventArgs e)
+        {
+            tbFilterTest.Text = string.Empty;
+            tbFilterTimeTaken.Text = string.Empty;
+            cbSortField.SelectedIndex = -1;
+            dgTestResults.ItemsSource = _allResults;
         }
 
         private void CloseButton_Click(object sender, RoutedEventArgs e)

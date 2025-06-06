@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
@@ -22,6 +23,8 @@ namespace AutomationTestingSafety
             _userInfo = userInfo;
             lblUserInfo.Text = $"Добро пожаловать, {_userInfo.FullName} (Администратор). Дата регистрации: {_userInfo.RegistrationDate:d}";
             LoadUsers();
+            tbFilterFIO.TextChanged += FilterUsers;
+            tbFilterPosition.TextChanged += FilterUsers;
         }
 
         private void ExitProfile(object sender, RoutedEventArgs e)
@@ -94,6 +97,17 @@ namespace AutomationTestingSafety
             }
         }
 
+        private void FilterUsers(object sender, TextChangedEventArgs e)
+        {
+            string fioFilter = tbFilterFIO.Text.ToLower();
+            string positionFilter = tbFilterPosition.Text.ToLower();
+
+            var filteredRows = usersTable.AsEnumerable()
+                .Where(row => row.Field<string>("ФИО").ToLower().Contains(fioFilter) &&
+                              row.Field<string>("Должность").ToLower().Contains(positionFilter));
+
+            UsersDataGrid.ItemsSource = filteredRows.AsDataView();
+        }
 
         // Автоматическое сохранение изменений при завершении редактирования строки
         private void UsersDataGrid_RowEditEnding(object sender, DataGridRowEditEndingEventArgs e)
@@ -222,6 +236,11 @@ namespace AutomationTestingSafety
             }
         }
 
+        private void ResetFilter_Click(object sender, RoutedEventArgs e)
+        {
+            tbFilterFIO.Text = string.Empty;
+            tbFilterPosition.Text = string.Empty;
+        }
 
     }
 }
